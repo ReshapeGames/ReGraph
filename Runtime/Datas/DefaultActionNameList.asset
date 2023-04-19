@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fe4305dd4f7441ab3d3d20fe25fbe5, type: 3}
+  m_Name: DefaultActionNameList
+  m_EditorClassIdentifier: 
+  actionName:
+  - Activate
+  - Deactivate
+  - Start
+  - End
+  - Begin
+  - Finish
+  - Stop
+  - Resume
+  - Enable
+  - Disable
+  - Add
+  - Remove
+  - Enter
+  - Exit
+  - Show
+  - Hide
+  - None
+  - Everything
+  - Reset
+  - Pause
+  - Unpause
+  - Plus
+  - Minus
+  - Spawn
+  - Destroy
+  - Update
+  - Cancel
+  - Init
+  - Uninit
+  - Awake
+  - Tick
+  - UI

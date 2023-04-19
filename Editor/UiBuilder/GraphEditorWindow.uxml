@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/ReGraph/Editor/Assets/UIBuilder/GrapgEditorWindow.uss?fileID=12385&amp;guid=4995cca0cf6d04c6bb0c3e4cfef14084&amp;type=3#GrapgEditorWindow" />
+    <uie:Toolbar>
+        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Tools " />
+    </uie:Toolbar>
+    <!--Reshape.Controller.SplitView fixed-pane-initial-dimension="300">
+        <ui:VisualElement name="left-panel">
+            <Reshape.Controller.SplitView orientation="Vertical" fixed-pane-initial-dimension="400">
+                <ui:VisualElement name="inspector-container" style="background-color: rgba(56, 56, 56, 255);">
+                    <ui:Label text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37);" />
+                    <Reshape.Controller.InspectorView style="background-color: rgba(56, 56, 56, 255);" />
+                </ui:VisualElement>
+                <ui:VisualElement name="blackboard-container" style="background-color: rgba(56, 56, 56, 255);">
+                    <ui:Label text="Blackboard" display-tooltip-when-elided="true" style="background-color: rgb(37, 37, 37);" />
+                    <Reshape.Controller.BlackboardView style="flex-grow: 1;">
+                        <uie:PropertyField />
+                    </Reshape.Controller.BlackboardView>
+                </ui:VisualElement>
+            </Reshape.Controller.SplitView>
+        </ui:VisualElement>
+        <ui:VisualElement name="right-panel">
+            <ui:Label text="Tree View" display-tooltip-when-elided="true" name="TitleLabel" style="background-color: rgb(37, 37, 37);" />
+            <Reshape.Controller.DialogTreeView focusable="true" style="flex-grow: 1; border-top-width: 0;" />
+        </ui:VisualElement>
+    </Reshape.Controller.SplitView-->
+    <ui:Label text="Graph View" display-tooltip-when-elided="true" name="TitleLabel" style="background-color: rgb(37, 37, 37);" />
+    <Reshape.ReGraph.GraphViewer focusable="true" style="flex-grow: 1;" />
+    <!--Reshape.Controller.OverlayView name="OverlayView" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.5); visibility: hidden;">
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(56, 56, 56); border-top-left-radius: 10px; border-bottom-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; flex-shrink: 0; width: 500px;">
+            <ui:Label tabindex="-1" text="Open Behaviour Tree" display-tooltip-when-elided="true" style="font-size: 25px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; -unity-font-style: bold;" />
+            <ui:VisualElement style="flex-grow: 0; margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; background-color: rgb(56, 56, 56);">
+                <ui:VisualElement style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(117, 117, 117); border-right-color: rgb(117, 117, 117); border-top-color: rgb(117, 117, 117); border-bottom-color: rgb(117, 117, 117); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
+                    <ui:Label text="Select Existing ..." display-tooltip-when-elided="true" style="-unity-text-align: upper-left; font-size: 16px; color: rgb(210, 210, 210); -unity-font-style: italic;" />
+                    <ui:DropdownField index="-1" label="Asset" />
+                    <ui:Button text="Open" display-tooltip-when-elided="true" name="OpenButton" style="align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; -unity-text-align: middle-center; flex-grow: 0; width: 150px;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-left-color: rgb(117, 117, 117); border-right-color: rgb(117, 117, 117); border-top-color: rgb(117, 117, 117); border-bottom-color: rgb(117, 117, 117); align-items: flex-start; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; margin-top: 10px; justify-content: flex-start;">
+                    <ui:Label tabindex="-1" text="Create New ..." display-tooltip-when-elided="true" style="font-size: 16px; -unity-font-style: italic; flex-grow: 1; align-items: flex-start; justify-content: flex-start;" />
+                    <ui:TextField picking-mode="Ignore" label="Name" value="New Behaviour Tree" text="New Behaviour Tree" name="TreeName" style="flex-grow: 1;" />
+                    <ui:TextField picking-mode="Ignore" label="Path" text="Assets/" name="LocationPath" style="flex-grow: 1;" />
+                    <ui:Button text="Create" display-tooltip-when-elided="true" name="CreateButton" style="align-items: flex-start; flex-direction: row; flex-wrap: nowrap; justify-content: flex-start; -unity-text-align: middle-center; flex-grow: 0; width: 150px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </Reshape.Controller.OverlayView-->
+</ui:UXML>

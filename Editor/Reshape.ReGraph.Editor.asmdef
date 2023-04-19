@@ -1,0 +1,18 @@
+{
+    "name": "Reshape.ReGraph.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6a80af8fe795b4ad1adad7d10ef4ed13"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

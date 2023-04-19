@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17d918db8630e481fb5473c855dfa252, type: 3}
+  m_Name: GraphSettings
+  m_EditorClassIdentifier: 
+  graphXml: {fileID: 9197481963319205126, guid: 46a6d00490f404ac5a16f564d9777b6a, type: 3}
+  graphStyle: {fileID: 7433441132597879392, guid: 4995cca0cf6d04c6bb0c3e4cfef14084, type: 3}
+  graphNodeXml: {fileID: 9197481963319205126, guid: 03b83b8020d824a3ead453a077868635, type: 3}
+  newNodeBasePath: Assets/

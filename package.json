@@ -1,0 +1,40 @@
+{
+  "name": "com.reshape.regraph",
+  "version": "0.2.2",
+  "displayName": "ReGraph",
+  "description": "A user-friendly trigger driven behaviour tree in Unity. It is develop base on the objective of making a tool that allow designer & artist create game with minimum coding effort.",
+  "unity": "2022.2",
+  "unityRelease": "1f1",
+  "documentationUrl": "https://github.com/ReshapeGames/ReGraph",
+  "changelogUrl": "https://github.com/ReshapeGames/ReGraph",
+  "licensesUrl": "https://github.com/ReshapeGames/ReGraph",
+
+  "dependencies":
+  {
+    "com.unity.inputsystem": "1.4.4",
+    "com.unity.textmeshpro": "3.0.6",
+    "com.unity.cinemachine": "2.9.5",
+    "com.unity.ai.navigation": "1.1.1"
+  },
+  "keywords":
+  [
+    "visual graph",
+    "visual scripting",
+    "behaviour tree",
+    "event trigger"
+  ],
+  "samples":
+  [
+    {
+      "displayName": "Labs",
+      "description": "Demonstrate the usage of ReGraph in lab layout.",
+      "path": "Samples~/Labs"
+    }
+  ],
+  "author":
+  {
+    "name": "Reshape",
+    "email": "alexocr@reshapeinteractive.com",
+    "url": "http://www.reshapeinteractive.com"
+  }
+}

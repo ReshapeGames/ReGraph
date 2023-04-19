@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/ReGraph/Editor/Assets/UIBuilder/GraphNodeView.uss?fileID=12385&amp;guid=6cc253039a0e544b9939620a1f7e9c0c&amp;type=3#GraphNodeView"/>
+    <ui:VisualElement name="node-state"/>
+    <ui:VisualElement name="node-border">
+        <ui:VisualElement name="contents">
+            <ui:VisualElement name="top">
+                <ui:VisualElement name="input" />
+                <ui:Label text="" name="category"/>
+                <ui:VisualElement name="divider" class="vertical"/>
+                <ui:VisualElement name="title">
+                    <ui:Label name="title-label" text="Error Node" class="unity-text-element unity-label"/>
+                    <ui:VisualElement name="title-button-container">
+                        <ui:VisualElement name="collapse-button">
+                            <ui:VisualElement name="icon"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:Label display-tooltip-when-elided="true" name="description"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="divider" class="horizontal"/>
+                <!--ui:VisualElement name="extension">
+                    <ui:Label text="Output" name="exportTo"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="divider" class="horizontal"/-->
+                <ui:VisualElement name="output">
+                    <ui:Label text="Exit" name="connectTo"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="selection-border" picking-mode="Ignore"/>
+</ui:UXML>

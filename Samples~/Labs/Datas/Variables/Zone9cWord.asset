@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3bee22d93f0341adb3dd234c3270d6a, type: 3}
+  m_Name: Zone9cWord
+  m_EditorClassIdentifier: 
+  persistent: 0
+  value: '{0} Coin'
+  param:
+  - {fileID: 11400000, guid: 2d03f8204bba141bf8ffd3340b13030d, type: 2}
+  runtimeValue: 100 Coin
+  inited: 1
+  previewValue: 100 Coin

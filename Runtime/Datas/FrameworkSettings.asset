@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f8118328df46c5b57f962d042fe437, type: 3}
+  m_Name: FrameworkSettings
+  m_EditorClassIdentifier: 
+  graphManager: {fileID: 2399840407429026664, guid: 43e75fd31850b4aeb8ed93864a289125, type: 3}
+  skipDebugNode: 0
+  fpPlayerController: {fileID: 4080005802794206696, guid: 360f9b5f748e44566ba3b7c995f65ead, type: 3}
+  tpPlayerController: {fileID: 4011511629871908059, guid: f0b6f8152d076468a91275469952fa96, type: 3}
+  outlineShader: {fileID: 4800000, guid: 86d919ad23cfc3f41a22e301207027bc, type: 3}
+  outlineBufferShader: {fileID: 4800000, guid: 1d468569140a4b645ab73ded30c32ab4, type: 3}
+  dialogCanvas: {fileID: 3092180158227367621, guid: 7528d5d8ef4a84bca9ce4a6adc9d6f14, type: 3}

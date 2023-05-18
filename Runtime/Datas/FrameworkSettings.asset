@@ -19,3 +19,5 @@ MonoBehaviour:
   outlineShader: {fileID: 4800000, guid: 86d919ad23cfc3f41a22e301207027bc, type: 3}
   outlineBufferShader: {fileID: 4800000, guid: 1d468569140a4b645ab73ded30c32ab4, type: 3}
   dialogCanvas: {fileID: 3092180158227367621, guid: 7528d5d8ef4a84bca9ce4a6adc9d6f14, type: 3}
+  removeAtSaveScene: 1
+  removeAtDeleteNode: 0

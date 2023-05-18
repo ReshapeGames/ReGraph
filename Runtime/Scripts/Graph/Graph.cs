@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Reshape.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Object = UnityEngine.Object;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -41,6 +43,9 @@ namespace Reshape.ReGraph
         [HideIf("@IsApplicationPlaying() == false")]
         private GraphExecutes executes;
 
+        [HideInInspector]
+        public int id;
+
         private GraphContext context;
         private bool terminated;
 
@@ -51,6 +56,10 @@ namespace Reshape.ReGraph
         [HideInInspector]
         public Vector3 viewScale = Vector3.one;
 
+        [FormerlySerializedAs("validGraphId")]
+        [HideInInspector]
+        public bool haveValidGraphId = true;
+        
         [SerializeReference]
         [HideIf("HidePreviewNode")]
         [HideDuplicateReferenceBox]
@@ -77,7 +86,255 @@ namespace Reshape.ReGraph
 
         [HideInInspector]
         public List<ISelectable> selectedViewNode;
+#endif
 
+        public Graph ()
+        {
+            executes = new GraphExecutes();
+        }
+
+        public GraphNode RootNode => rootNode;
+
+        public GraphType Type => type;
+
+        public bool Created => rootNode != null;
+
+        public bool Terminated => terminated;
+
+        public void Create ()
+        {
+            rootNode = new RootNode();
+            nodes.Add(rootNode);
+        }
+
+        public void Bind (GraphContext c)
+        {
+            context = c;
+            Traverse(rootNode, node => { node.context = context; });
+        }
+
+        public GraphContext Context => context;
+
+        public GraphExecution InitExecute (long id, TriggerNode.Type triggerType)
+        {
+            if (!Created)
+                return null;
+            var execution = executes.Add(id, triggerType);
+            return execution;
+        }
+
+        public void RunExecute (GraphExecution execution, int updateId)
+        {
+            if (!Created)
+                return;
+            if (execution != null)
+                StartExecute(execution, updateId);
+        }
+
+        public GraphExecution FindExecute (long executionId)
+        {
+            if (!Created)
+                return null;
+            return executes.Find(executionId);
+        }
+
+        public void ResumeExecute (GraphExecution execution, int updateId)
+        {
+            if (!Created)
+                return;
+            if (execution != null)
+                StartExecute(execution, updateId);
+        }
+
+        public void StopExecute (GraphExecution execution, int updateId)
+        {
+            if (!Created)
+                return;
+            if (execution != null)
+            {
+                execution.Stop();
+            }
+        }
+
+        public void StopExecutes ()
+        {
+            if (!Created || executes == null)
+                return;
+            for (int i = 0; i < executes.Count; i++)
+            {
+                var execution = executes.Get(i);
+                if (execution.state == Node.State.Running)
+                    rootNode.Stop(execution);
+            }
+
+            executes.Stop();
+        }
+
+        public void PauseExecutes ()
+        {
+            if (!Created || executes == null)
+                return;
+            for (int i = 0; i < executes.Count; i++)
+            {
+                var execution = executes.Get(i);
+                if (execution.state == Node.State.Running)
+                    rootNode.Pause(execution);
+            }
+        }
+
+        public void UnpauseExecutes ()
+        {
+            if (!Created || executes == null)
+                return;
+            for (int i = 0; i < executes.Count; i++)
+            {
+                var execution = executes.Get(i);
+                if (execution.state == Node.State.Running)
+                    rootNode.Unpause(execution);
+            }
+        }
+
+        private bool StartExecute (GraphExecution execution, int updateId)
+        {
+            if (execution.lastExecutedUpdateId < updateId)
+            {
+                execution.state = rootNode.Update(execution, updateId);
+                execution.lastExecutedUpdateId = updateId;
+                if (execution.state is Node.State.Failure or Node.State.Success)
+                    return true;
+            }
+            else if (execution.lastExecutedUpdateId == updateId)
+            {
+                //ReDebug.LogWarning("Graph Warning", "Ignore an execution same with previous execution (" + updateId + ") in " + context.gameObject.name);
+            }
+            else
+            {
+                ReDebug.LogWarning("Graph Warning", "Ignore an outdated execution in " + context.gameObject.name);
+            }
+
+            return false;
+        }
+
+        public void Update (int updateId)
+        {
+            if (!Created || executes == null)
+                return;
+            for (int i = 0; i < executes.Count; i++)
+            {
+                var execution = executes.Get(i);
+                if (execution.state == Node.State.Running)
+                    StartExecute(execution, updateId);
+            }
+
+            CleanExecutes();
+        }
+
+        public void CleanExecutes ()
+        {
+            for (int i = 0; i < executes.Count; i++)
+            {
+                var execution = executes.Get(i);
+                if (execution.state is Node.State.Failure or Node.State.Success)
+                {
+                    executes.Remove(i);
+                    i--;
+                }
+            }
+        }
+
+        public void Reset ()
+        {
+            if (executes != null)
+                executes.Clear();
+            Traverse(rootNode, node => { node.Reset(); });
+        }
+
+        public void Stop ()
+        {
+            if (executes != null)
+                for (int i = 0; i < executes.Count; i++)
+                    rootNode?.Abort(executes.Get(i));
+            Reset();
+            terminated = true;
+        }
+
+        public void Start ()
+        {
+            Traverse(rootNode, node => { node.Init(); });
+        }
+
+        public bool IsNodeTypeInUse (Type nodeType)
+        {
+            if (nodes != null)
+            {
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    if (nodes[i] != null && nodes[i].GetType() == nodeType)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HaveRequireUpdate ()
+        {
+            if (!Created || executes == null)
+                return false;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] != null && nodes[i].IsRequireUpdate())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool HaveRequireBegin ()
+        {
+            if (!Created || executes == null)
+                return false;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] != null && nodes[i].IsRequireBegin())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool HaveRequireInit ()
+        {
+            if (!Created || executes == null)
+                return false;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] != null && nodes[i].IsRequireInit())
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static List<GraphNode> GetChildren (GraphNode parent)
+        {
+            var children = new List<GraphNode>();
+            parent?.GetChildren(ref children);
+            return children;
+        }
+
+        public static void Traverse (GraphNode node, Action<GraphNode> visitor)
+        {
+            if (node != null)
+            {
+                visitor.Invoke(node);
+                var children = GetChildren(node);
+                foreach (var n in children)
+                    Traverse(n, visitor);
+            }
+        }
+
+#if UNITY_EDITOR
         private static IEnumerable TypeChoice = new ValueDropdownList<GraphType>()
         {
             {"Behaviour Graph", GraphType.BehaviourGraph},
@@ -102,6 +359,15 @@ namespace Reshape.ReGraph
                 {
                     Create();
                 }
+            }
+        }
+        
+        public void UpdateGraphId (int previousId, int newId)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] != null)
+                    nodes[i].OnUpdateGraphId(previousId, newId);
             }
         }
 
@@ -179,214 +445,5 @@ namespace Reshape.ReGraph
             previewSelected = false;
         }
 #endif
-
-        public Graph ()
-        {
-            executes = new GraphExecutes();
-        }
-
-        public GraphNode RootNode => rootNode;
-
-        public GraphType Type => type;
-
-        public bool Created => rootNode != null;
-
-        public bool Terminated => terminated;
-
-        public void Create ()
-        {
-            rootNode = new RootNode();
-            nodes.Add(rootNode);
-        }
-
-        public void Bind (GraphContext c)
-        {
-            context = c;
-            Traverse(rootNode, node => { node.context = context; });
-        }
-
-        public GraphContext Context => context;
-
-        public GraphExecution InitExecute (long id, TriggerNode.Type triggerType)
-        {
-            if (!Created)
-                return null;
-            var execution = executes.Add(id, triggerType);
-            return execution;
-        }
-
-        public void RunExecute (GraphExecution execution, int updateId)
-        {
-            if (!Created)
-                return;
-            if (execution != null)
-                StartExecute(execution, updateId);
-        }
-
-        public GraphExecution FindExecute (long executionId)
-        {
-            if (!Created)
-                return null;
-            return executes.Find(executionId);
-        }
-
-        public void ResumeExecute (GraphExecution execution, int updateId)
-        {
-            if (!Created)
-                return;
-            if (execution != null)
-                StartExecute(execution, updateId);
-        }
-
-        public void StopExecute (GraphExecution execution, int updateId)
-        {
-            if (!Created)
-                return;
-            if (execution != null)
-            {
-                execution.Stop();
-            }
-        }
-
-        public void StopExecutes ()
-        {
-            if (!Created)
-                return;
-            if (executes != null)
-            {
-                executes.Stop();
-            }
-        }
-
-        public void PauseExecutes ()
-        {
-            if (!Created || executes == null)
-                return;
-            for (int i = 0; i < executes.Count; i++)
-            {
-                var execution = executes.Get(i);
-                if (execution.state == Node.State.Running)
-                    rootNode.Pause(execution);
-            }
-        }
-
-        public void UnpauseExecutes ()
-        {
-            if (!Created || executes == null)
-                return;
-            for (int i = 0; i < executes.Count; i++)
-            {
-                var execution = executes.Get(i);
-                if (execution.state == Node.State.Running)
-                    rootNode.Unpause(execution);
-            }
-        }
-
-        private bool StartExecute (GraphExecution execution, int updateId)
-        {
-            execution.state = rootNode.Update(execution, updateId);
-            if (execution.state is Node.State.Failure or Node.State.Success)
-                return true;
-            return false;
-        }
-
-        public void Update (int updateId)
-        {
-            if (!Created || executes == null)
-                return;
-            for (int i = 0; i < executes.Count; i++)
-            {
-                var execution = executes.Get(i);
-                if (execution.state == Node.State.Running)
-                    StartExecute(execution, updateId);
-            }
-            for (int i = 0; i < executes.Count; i++)
-            {
-                var execution = executes.Get(i);
-                if (execution.state is Node.State.Failure or Node.State.Success)
-                {
-                    executes.Remove(i);
-                    i--;
-                }
-            }
-        }
-
-        public void Reset ()
-        {
-            if (executes != null)
-                executes.Clear();
-            Traverse(rootNode, node => { node.Reset(); });
-        }
-
-        public void Stop ()
-        {
-            if (executes != null)
-                for (int i = 0; i < executes.Count; i++)
-                    rootNode?.Abort(executes.Get(i));
-            Reset();
-            terminated = true;
-        }
-
-        public void Start ()
-        {
-            Traverse(rootNode, node => { node.Init(); });
-        }
-
-        public bool HaveRequireUpdate ()
-        {
-            if (!Created || executes == null)
-                return false;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                if (nodes[i] != null && nodes[i].IsRequireUpdate())
-                    return true;
-            }
-
-            return false;
-        }
-        
-        public bool HaveRequireBegin ()
-        {
-            if (!Created || executes == null)
-                return false;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                if (nodes[i] != null && nodes[i].IsRequireBegin())
-                    return true;
-            }
-
-            return false;
-        }
-
-        public bool HaveRequireInit ()
-        {
-            if (!Created || executes == null)
-                return false;
-            for (int i = 0; i < nodes.Count; i++)
-            {
-                if (nodes[i] != null && nodes[i].IsRequireInit())
-                    return true;
-            }
-
-            return false;
-        }
-
-        public static List<GraphNode> GetChildren (GraphNode parent)
-        {
-            var children = new List<GraphNode>();
-            parent?.GetChildren(ref children);
-            return children;
-        }
-
-        public static void Traverse (GraphNode node, Action<GraphNode> visitor)
-        {
-            if (node != null)
-            {
-                visitor.Invoke(node);
-                var children = GetChildren(node);
-                foreach (var n in children)
-                    Traverse(n, visitor);
-            }
-        }
     }
 }

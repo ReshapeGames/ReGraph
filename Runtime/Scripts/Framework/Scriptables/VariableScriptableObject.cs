@@ -1,7 +1,11 @@
 using System;
+using Reshape.ReGraph;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Reshape.ReFramework
 {
@@ -51,6 +55,16 @@ namespace Reshape.ReFramework
             onReset?.Invoke();
         }
         
+        public virtual object GetObject ()
+        {
+            return default;
+        }
+        
+        public virtual void SetObject (object obj)
+        {
+            
+        }
+
 #if UNITY_EDITOR
         private bool ShowPropertyPersistentInfo ()
         {
@@ -64,6 +78,50 @@ namespace Reshape.ReFramework
             if (this is SceneObjectVariable)
                 return true;
             return false;
+        }
+        
+        public static void OpenCreateVariableMenu (VariableScriptableObject variable)
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(new GUIContent("Word Variable"), false, CreateWordVariable, variable);
+            menu.AddItem(new GUIContent("Number Variable"), false, CreateNumberVariable, variable);
+            menu.ShowAsContext(); 
+            
+            void CreateNumberVariable (object varObj)
+            {
+                if (varObj != null)
+                {
+                    VariableScriptableObject preVar = (VariableScriptableObject)varObj;
+                    var created = NumberVariable.CreateNew(preVar);
+                    if (created != null && created != preVar)
+                    {
+                        GameObject go = (GameObject)Selection.activeObject;
+                        GraphEditorVariable.SetString(go.GetInstanceID().ToString(), "createVariable", AssetDatabase.GetAssetPath(created));
+                    }
+                }
+                else
+                {
+                    NumberVariable.CreateNew(null);
+                }
+            }
+        
+            void CreateWordVariable (object varObj)
+            {
+                if (varObj != null)
+                {
+                    VariableScriptableObject preVar = (VariableScriptableObject) varObj;
+                    var created = WordVariable.CreateNew(preVar);
+                    if (created != null && created != preVar)
+                    {
+                        GameObject go = (GameObject) Selection.activeObject;
+                        GraphEditorVariable.SetString(go.GetInstanceID().ToString(), "createVariable", AssetDatabase.GetAssetPath(created));
+                    }
+                }
+                else
+                {
+                    WordVariable.CreateNew(null);
+                }
+            }
         }
 #endif
     }

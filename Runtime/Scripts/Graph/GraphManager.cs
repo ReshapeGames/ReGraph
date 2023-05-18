@@ -44,6 +44,7 @@ namespace Reshape.ReGraph
 #endif
     }
 
+    [AddComponentMenu("")]
     [HideMonoScript]
     public class GraphManager : ReSinglonBehaviour<GraphManager>
     {
@@ -155,7 +156,7 @@ namespace Reshape.ReGraph
         }
 
 #if UNITY_EDITOR
-        [MenuItem("GameObject/Reshape/Graph Manager", false, 100)]
+        [MenuItem("GameObject/Reshape/Graph Manager", false, -120)]
         public static void AddGraphManager ()
         {
             if (ReEditorHelper.IsInPrefabStage())

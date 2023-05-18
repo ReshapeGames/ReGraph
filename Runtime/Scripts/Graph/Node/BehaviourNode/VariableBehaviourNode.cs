@@ -2,6 +2,10 @@ using Reshape.ReFramework;
 using Reshape.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 namespace Reshape.ReGraph
 {
@@ -54,6 +58,18 @@ namespace Reshape.ReGraph
 
         private void CheckVariableDirty ()
         {
+            string createVarPath = GraphEditorVariable.GetString(runner.gameObject.GetInstanceID().ToString(), "createVariable");
+            if (!string.IsNullOrEmpty(createVarPath))
+            {
+                GraphEditorVariable.SetString(runner.gameObject.GetInstanceID().ToString(), "createVariable", string.Empty);
+                var createVar = (VariableScriptableObject)AssetDatabase.LoadAssetAtPath(createVarPath, typeof(VariableScriptableObject));
+                var info = variableBehaviour;
+                info.variable = createVar;
+                variableBehaviour = info;
+                MarkDirty();
+                MarkRepaint();
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            }
             MarkPropertyDirty(variableBehaviour.number);
             MarkPropertyDirty(variableBehaviour.message);
         }

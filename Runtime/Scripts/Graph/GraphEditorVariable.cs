@@ -7,8 +7,6 @@ namespace Reshape.ReGraph
     public class GraphEditorVariable
     {
 #if UNITY_EDITOR
-        public const string OutputBNPreviousParentGuid = "_ReGraph.OutputBehaviourNode.PreviousParentGuid";
-        
         public static string GetString (string id, string variable)
         {
             return EditorPrefs.GetString(id+variable, string.Empty);

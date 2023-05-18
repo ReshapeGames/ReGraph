@@ -15,7 +15,7 @@ namespace Reshape.ReGraph
         [OnValueChanged("SelectRunner")]
         public GraphRunner runner;
 
-        [MenuItem("Tools/Reshape/Graph Inspector")]
+        [MenuItem("Tools/Reshape/Graph Inspector", priority = 11001)]
         public static void OpenWindow ()
         {
             var window = GetWindow<GraphInspector>();

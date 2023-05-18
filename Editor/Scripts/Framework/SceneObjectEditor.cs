@@ -10,7 +10,7 @@ namespace Reshape.ReFramework
         protected override void DrawPropertyLayout (GUIContent label)
         {
             SceneObject value = this.ValueEntry.SmartValue;
-            if (!value.showType && !value.ShowGo() && value.showAsNodeProperty)
+            if (!value.showType && !value.ShowGo() && !value.ShowMaterial() && !value.ShowAudioMixer() && value.showAsNodeProperty)
             {
                 Component temp = value.component;
                 var fieldLabel = value.ComponentName();

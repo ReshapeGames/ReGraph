@@ -23,8 +23,8 @@
 */
 
 using UnityEngine;
-using System.Linq;
 using System.Collections.Generic;
+using Color = UnityEngine.Color;
 
 namespace Reshape.ReFramework
 {
@@ -33,54 +33,82 @@ namespace Reshape.ReFramework
     {
         public Renderer Renderer { get; private set; }
 
-        public int color;
+        public int colorIndex;
+        public Color color;
         public bool eraseRenderer;
 
         private int registeredId;
+        private bool invisible;
 
-        public void Enable(bool enable, int id = 0)
+        public void Enable (bool enable, int id = 0)
         {
             if (enable)
             {
-                enabled = true;
-                registeredId = id;
+                if (!enabled)
+                {
+                    enabled = true;
+                    registeredId = id;
+                    OnEnable();
+                }
             }
             else if (registeredId == 0)
             {
-                enabled = false;
+                if (enabled)
+                {
+                    enabled = false;
+                    OnDisable();
+                }
             }
             else if (registeredId == id)
             {
-                enabled = false;
+                if (enabled)
+                {
+                    enabled = false;
+                    OnDisable();
+                }
             }
         }
 
-        private void Awake()
+        public void SetColor (Color c, int index)
+        {
+            color = c;
+            colorIndex = index;
+        }
+
+        private void Awake ()
         {
             Renderer = GetComponent<Renderer>();
         }
 
-        void OnEnable()
+        void OnEnable ()
         {
-			IEnumerable<OutlineEffect> effects = Camera.allCameras.AsEnumerable()
-				.Select(c => c.GetComponent<OutlineEffect>())
-				.Where(e => e != null);
+            List<OutlineEffect> effects = OutlineEffect.Instances;
+            for (int i = 0; i < effects.Count; i++)
+                effects[i].AddOutline(this);
+        }
 
-			foreach (OutlineEffect effect in effects)
+        void OnDisable ()
+        {
+            List<OutlineEffect> effects = OutlineEffect.Instances;
+            for (int i = 0; i < effects.Count; i++)
+                effects[i].RemoveOutline(this);
+        }
+
+        private void OnBecameInvisible ()
+        {
+            if (enabled)
             {
-                effect.AddOutline(this);
+                invisible = true;
+                OnDisable();
             }
         }
 
-        void OnDisable()
+        private void OnBecameVisible ()
         {
-			IEnumerable<OutlineEffect> effects = Camera.allCameras.AsEnumerable()
-				.Select(c => c.GetComponent<OutlineEffect>())
-				.Where(e => e != null);
-
-			foreach (OutlineEffect effect in effects)
+            if (enabled && invisible)
             {
-                effect.RemoveOutline(this);
+                invisible = false;
+                OnEnable();
             }
         }
     }

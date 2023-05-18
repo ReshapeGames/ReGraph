@@ -34,6 +34,7 @@ namespace Reshape.ReFramework
         }
 
         [OnValueChanged("OnChangeVariable")]
+        [InlineButton("@VariableScriptableObject.OpenCreateVariableMenu(variable)", "✚")]
         public VariableScriptableObject variable;
 
         [ValueDropdown("TypeChoice")]
@@ -165,6 +166,7 @@ namespace Reshape.ReFramework
             condition = Condition.None;
             number.Reset();
             message.Reset();
+            typeChanged = true;
         }
 
         private bool ShowParamType ()

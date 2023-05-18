@@ -3,6 +3,7 @@ using Reshape.ReGraph;
 using Reshape.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Serialization;
 
 namespace Reshape.ReFramework
@@ -78,6 +79,50 @@ namespace Reshape.ReFramework
                 return default;
             return f.variableValue.GetGameObject();
         }
+        
+        public static implicit operator Material (SceneObjectProperty f)
+        {
+            if (f.type == 0)
+            {
+                if (f.objectValue != null)
+                {
+                    if (f.objectValue.IsMaterial())
+                    {
+                        Material mat = null;
+                        if (f.objectValue.TryGetValue(ref mat))
+                            return mat;
+                    }
+                }
+
+                return default;
+            }
+
+            if (f.variableValue == null)
+                return default;
+            return f.variableValue.GetMaterial();
+        }
+        
+        public static implicit operator AudioMixer (SceneObjectProperty f)
+        {
+            if (f.type == 0)
+            {
+                if (f.objectValue != null)
+                {
+                    if (f.objectValue.IsAudioMixer())
+                    {
+                        AudioMixer mixer = null;
+                        if (f.objectValue.TryGetValue(ref mixer))
+                            return mixer;
+                    }
+                }
+
+                return default;
+            }
+
+            if (f.variableValue == null)
+                return default;
+            return f.variableValue.GetAudioMixer();
+        }
 
         public static implicit operator Component (SceneObjectProperty f)
         {
@@ -110,6 +155,16 @@ namespace Reshape.ReFramework
         {
             objectValue.TrySetValue(go);
         }
+        
+        public void SetObjectValue (AudioMixer mixer)
+        {
+            objectValue.TrySetValue(mixer);
+        }
+        
+        public void SetObjectValue (Material mat)
+        {
+            objectValue.TrySetValue(mat);
+        }
 
         public bool IsObjectValueType ()
         {
@@ -138,6 +193,18 @@ namespace Reshape.ReFramework
                             if (objectValue.TryGetValue(ref comp))
                                 return false;
                         }
+                        else if (objectValue.IsMaterial())
+                        {
+                            Material mat = null;
+                            if (objectValue.TryGetValue(ref mat))
+                                return false;
+                        }
+                        else if (objectValue.IsAudioMixer())
+                        {
+                            AudioMixer mixer = null;
+                            if (objectValue.TryGetValue(ref mixer))
+                                return false;
+                        }
                     }
                 }
                 else
@@ -154,6 +221,18 @@ namespace Reshape.ReFramework
                         {
                             Component comp = variableValue.GetComponent();
                             if (comp != null)
+                                return false;
+                        }
+                        else if (objectValue.IsMaterial())
+                        {
+                            Material mat = variableValue.GetMaterial();
+                            if (mat != null)
+                                return false;
+                        }
+                        else if (objectValue.IsAudioMixer())
+                        {
+                            AudioMixer mixer = variableValue.GetAudioMixer();
+                            if (mixer != null)
                                 return false;
                         }
                     }
@@ -183,6 +262,18 @@ namespace Reshape.ReFramework
                             if (objectValue.TryGetValue(ref comp))
                                 return comp.gameObject.name;
                         }
+                        else if (objectValue.IsMaterial())
+                        {
+                            Material mat = null;
+                            if (objectValue.TryGetValue(ref mat))
+                                return mat.name;
+                        }
+                        else if (objectValue.IsAudioMixer())
+                        {
+                            AudioMixer mixer = null;
+                            if (objectValue.TryGetValue(ref mixer))
+                                return mixer.name;
+                        }
                     }
                 }
                 else
@@ -200,6 +291,18 @@ namespace Reshape.ReFramework
                             Component comp = variableValue.GetComponent();
                             if (comp != null)
                                 return comp.gameObject.name;
+                        }
+                        else if (objectValue.IsMaterial())
+                        {
+                            Material mat = variableValue.GetMaterial();
+                            if (mat != null)
+                                return mat.name;
+                        }
+                        else if (objectValue.IsAudioMixer())
+                        {
+                            AudioMixer mixer = variableValue.GetAudioMixer();
+                            if (mixer != null)
+                                return mixer.name;
                         }
                     }
                 }

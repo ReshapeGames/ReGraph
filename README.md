@@ -70,10 +70,13 @@ Not making Graph / Graph Node as ScriptableObject because I would like to stream
 
 ## More information
 
-Check out the [Documentation](Documentation~/) folder for more information. In particular, the [Getting Started Guide](Documentation~/GettingStarted.md) is a good place to start.
+Check out the [Documentation](Documentation~/) folder for more information. <br/>
+In particular, the [Getting Started Guide](Documentation~/GettingStarted.md) is a good place to start. <br/>
+Check out [ChangeLog](CHANGELOG.md) to take a look on each release build changes.
 
 ## Special Thanks
 * [TheKiwiCoder](https://thekiwicoder.com/behaviour-tree-editor/) for release the FREE Behaviour Tree Editor. 
+* [Demigiant](http://dotween.demigiant.com) for release the FREE DOTween. 
 * https://game-icons.net/ for free icon tools
 * https://mixkit.co/free-stock-music/ for free music
 

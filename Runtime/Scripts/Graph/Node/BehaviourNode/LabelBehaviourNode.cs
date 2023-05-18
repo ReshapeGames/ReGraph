@@ -45,7 +45,7 @@ namespace Reshape.ReGraph
         [HideIf("@executionType != ExecutionType.StringToTextMeshPro && executionType != ExecutionType.VariableToTextMeshPro")]
         [HideLabel, InlineProperty, OnInspectorGUI("@MarkPropertyDirty(textMeshProLabel)")]
         [InlineButton("@textMeshProLabel.SetObjectValue(AssignComponent<TMP_Text>())", "♺", ShowIf = "@textMeshProLabel.IsObjectValueType()")]
-        private SceneObjectProperty textMeshProLabel = new SceneObjectProperty(SceneObject.ObjectType.TextMeshPro);
+        private SceneObjectProperty textMeshProLabel = new SceneObjectProperty(SceneObject.ObjectType.TextMeshProText);
 
         [SerializeField]
         [OnValueChanged("MarkDirty")]

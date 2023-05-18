@@ -12,6 +12,7 @@ namespace Reshape.ReGraph
         [PropertyOrder(-10)]
         [ValueDropdown("TypeChoice")]
         [OnValueChanged("OnChangeType")]
+        [InlineButton("OnChangeType", "↺")]
         public Type searchType;
 
         [PropertyOrder(-9)]
@@ -20,7 +21,7 @@ namespace Reshape.ReGraph
         [ListDrawerSettings(HideAddButton = true, HideRemoveButton = true, DraggableItems = false, IsReadOnly = true, ShowPaging = false)]
         public List<GameObject> matchGo;
 
-        [MenuItem("Tools/Reshape/Graph Finder")]
+        [MenuItem("Tools/Reshape/Graph Finder", priority = 11002)]
         public static void OpenWindow ()
         {
             var window = GetWindow<GraphFinder>();

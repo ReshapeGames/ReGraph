@@ -3,7 +3,7 @@
 ReGraph is a user-friendly trigger driven behaviour tree in Unity. </br>
 Below is a list of chnages summary for each release build
 
-## [0.2.4] - 2023-05-18
+## [0.2.5] - 2023-05-18
 
 ### This milestone featured game save and tween
 

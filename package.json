@@ -1,6 +1,6 @@
 {
   "name": "com.reshape.regraph",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "displayName": "ReGraph",
   "description": "A user-friendly trigger driven behaviour tree in Unity. It is develop base on the objective of making a tool that allow designer & artist create game with minimum coding effort.",
   "unity": "2022.2",

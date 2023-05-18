@@ -149,6 +149,9 @@ namespace Reshape.ReGraph
 
 #if UNITY_EDITOR
         public virtual void OnDrawGizmos () { }
+        public virtual void OnUpdateGraphId (int previousId, int newId) { }
+        public virtual void OnClone (GraphNode selectedNode) { }
+        public virtual void OnDelete () { }
 #endif
 
         protected abstract void OnInit ();

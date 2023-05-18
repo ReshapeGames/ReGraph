@@ -22,17 +22,18 @@ namespace Reshape.ReFramework
         [HideLabel]
         [ShowIf("@type == 1")]
         [InlineButton("SwitchToFloat", "▼")]
+        [InlineButton("CreateWordVariable", "✚")]
         [OnValueChanged("MarkDirty")]
         private NumberVariable variableValue;
 
         [HideInInspector]
         public int type = 0;
-        
-        public FloatProperty ShallowCopy()
+
+        public FloatProperty ShallowCopy ()
         {
             return (FloatProperty) this.MemberwiseClone();
         }
-        
+
         public static implicit operator float (FloatProperty f)
         {
             if (f.type == 0)
@@ -41,17 +42,17 @@ namespace Reshape.ReFramework
                 return 0;
             return f.variableValue;
         }
-        
+
         public static implicit operator int (FloatProperty f)
         {
             if (f.type == 0)
-                return (int)f.floatValue;
+                return (int) f.floatValue;
             if (f.variableValue == null)
                 return 0;
-            return (int)f.variableValue;
+            return (int) f.variableValue;
         }
-        
-        
+
+
         public static explicit operator FloatProperty (float f) => new FloatProperty(f);
 
         public FloatProperty (float f)
@@ -76,10 +77,14 @@ namespace Reshape.ReFramework
             variableValue = null;
             floatValue = 0;
         }
-        
-        
 
 #if UNITY_EDITOR
+        private void CreateWordVariable ()
+        {
+            variableValue = NumberVariable.CreateNew(variableValue);
+            dirty = true;
+        }
+
         private void MarkDirty ()
         {
             dirty = true;

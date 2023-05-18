@@ -26,50 +26,50 @@ namespace Reshape.ReGraph
                 return outState;
             return defaultValue;
         }
-        
+
         public void SetState (string nodeId, Node.State value)
         {
             if (!state.TryAdd(nodeId, value))
                 state[nodeId] = value;
         }
-        
+
         public bool GetStarted (string nodeId, bool defaultValue)
         {
             if (started.TryGetValue(nodeId, out bool outStarted))
                 return outStarted;
             return defaultValue;
         }
-        
+
         public void SetStarted (string nodeId, bool value)
         {
             if (!started.TryAdd(nodeId, value))
                 started[nodeId] = value;
         }
-        
-        public int GetInt (string nodeId, int defaultValue = 0)
+
+        public int GetInt (string varId, int defaultValue = 0)
         {
-            if (intList.TryGetValue(nodeId, out int outInt))
+            if (intList.TryGetValue(varId, out int outInt))
                 return outInt;
             return defaultValue;
         }
-        
-        public void SetInt (string nodeId, int value)
+
+        public void SetInt (string varId, int value)
         {
-            if (!intList.TryAdd(nodeId, value))
-                intList[nodeId] = value;
+            if (!intList.TryAdd(varId, value))
+                intList[varId] = value;
         }
-        
-        public float GetFloat (string nodeId, float defaultValue = 0f)
+
+        public float GetFloat (string varId, float defaultValue = 0f)
         {
-            if (floatList.TryGetValue(nodeId, out float outFloat))
+            if (floatList.TryGetValue(varId, out float outFloat))
                 return outFloat;
             return defaultValue;
         }
-        
-        public void SetFloat (string nodeId, float value)
+
+        public void SetFloat (string varId, float value)
         {
-            if (!floatList.TryAdd(nodeId, value))
-                floatList[nodeId] = value;
+            if (!floatList.TryAdd(varId, value))
+                floatList[varId] = value;
         }
     }
 }

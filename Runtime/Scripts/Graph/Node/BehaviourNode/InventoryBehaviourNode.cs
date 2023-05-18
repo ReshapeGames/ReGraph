@@ -13,6 +13,10 @@ namespace Reshape.ReGraph
     [System.Serializable]
     public class InventoryBehaviourNode : BehaviourNode
     {
+        private const string SAVE_NAME_MIDDLE = "_inv_";
+        private const float DEFAULT_SIZE = 100;
+        private const float DEFAULT_STACK = 9999999;
+
         public enum ExecutionType
         {
             None,
@@ -21,6 +25,8 @@ namespace Reshape.ReGraph
             Clear = 31,
             AddItem = 41,
             RemoveItem = 51,
+            Save = 101,
+            Load = 111,
             LinkItemTotalQuantity = 901,
             GetItemTotalQuantity = 1001
         }
@@ -52,7 +58,7 @@ namespace Reshape.ReGraph
         [LabelText("@GetSizeLabel()")]
         [OnInspectorGUI("@MarkPropertyDirty(size)")]
         [InlineProperty]
-        private FloatProperty size = new FloatProperty(1000);
+        private FloatProperty size = new FloatProperty(DEFAULT_SIZE);
 
         [SerializeField]
         [ShowIf("@executionType == ExecutionType.Create")]
@@ -60,7 +66,7 @@ namespace Reshape.ReGraph
         [ReadOnly]
         [OnInspectorGUI("@MarkPropertyDirty(stack)")]
         [InlineProperty]
-        private FloatProperty stack = new FloatProperty(9999999);
+        private FloatProperty stack = new FloatProperty(DEFAULT_STACK);
 
         [SerializeField]
         [OnValueChanged("MarkDirty")]
@@ -70,8 +76,23 @@ namespace Reshape.ReGraph
 
         [SerializeField]
         [OnValueChanged("MarkDirty")]
-        [ShowIf("@executionType == ExecutionType.AddItem")]
+        [ShowIf("@executionType == ExecutionType.AddItem || executionType == ExecutionType.Load")]
+        [LabelText("@GetAutoCreateLabel()")]
         private bool autoCreate;
+        
+        [SerializeField]
+        [OnInspectorGUI("@MarkPropertyDirty(paramStr1)")]
+        [InlineProperty]
+        [ShowIf("@executionType == ExecutionType.Save || executionType == ExecutionType.Load")]
+        [LabelText("Save File")]
+        private StringProperty paramStr1;
+        
+        [SerializeField]
+        [OnInspectorGUI("@MarkPropertyDirty(paramStr2)")]
+        [InlineProperty]
+        [ShowIf("@executionType == ExecutionType.Save || executionType == ExecutionType.Load")]
+        [LabelText("Password")]
+        private StringProperty paramStr2;
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
@@ -83,7 +104,10 @@ namespace Reshape.ReGraph
                 }
                 else
                 {
-                    ReInventoryController.CreateInventory(inventoryName, size, stack);
+                    if (!ReInventoryController.CreateInventory(inventoryName, size, stack))
+                    {
+                        ReDebug.LogWarning("Graph Warning", $"{inventoryName} inventory not success create in {context.gameObject.name}.");
+                    }
                 }
             }
             else if (executionType == ExecutionType.Destroy)
@@ -116,6 +140,51 @@ namespace Reshape.ReGraph
                     }
                 }
             }
+            else if (executionType == ExecutionType.Save)
+            {
+                if (string.IsNullOrEmpty(inventoryName))
+                {
+                    ReDebug.LogWarning("Graph Warning", "Found an empty Inventory Behaviour node in " + context.gameObject.name);
+                }
+                else
+                {
+                    InventoryData inv = ReInventoryController.GetInventory(inventoryName);
+                    if (inv != null)
+                    {
+                        SaveOperation op = ReSave.Save(paramStr1 + SAVE_NAME_MIDDLE + inventoryName, ReJson.ObjectToCustomJson(inv), paramStr2);
+                        if (!op.success)
+                            ReDebug.LogWarning("Graph Warning", $"{inventoryName} inventory not success save in {context.gameObject.name}.");
+                    }
+                    else
+                    {
+                        ReDebug.LogWarning("Graph Warning", $"{inventoryName} inventory not found when doing save in {context.gameObject.name}.");
+                    }
+                }
+            }
+            else if (executionType == ExecutionType.Load)
+            {
+                if (string.IsNullOrEmpty(inventoryName))
+                {
+                    ReDebug.LogWarning("Graph Warning", "Found an empty Inventory Behaviour node in " + context.gameObject.name);
+                }
+                else
+                {
+                    SaveOperation op = ReSave.Load(paramStr1 + SAVE_NAME_MIDDLE + inventoryName, paramStr2);
+                    Debug.Log(op.savedString);
+                    if (!op.success)
+                    {
+                        ReDebug.LogWarning("Graph Warning", $"{inventoryName} inventory not success load in {context.gameObject.name}.");
+                    }
+                    else
+                    {
+                        InventoryData inv = (InventoryData) ReJson.ObjectFromCustomJson<InventoryData>(op.savedString);
+                        if (autoCreate)
+                            ReInventoryController.DestroyInventory(inventoryName);
+                        if (!ReInventoryController.CreateInventory(inv))
+                            ReDebug.LogWarning("Graph Warning", $"{inventoryName} inventory not success create in {context.gameObject.name}.");
+                    }
+                }
+            }
             else if (executionType == ExecutionType.AddItem)
             {
                 if (string.IsNullOrEmpty(inventoryName) || item == null || size <= 0)
@@ -133,7 +202,7 @@ namespace Reshape.ReGraph
                         }
                         else
                         {
-                            ReInventoryController.CreateInventory(inventoryName, size, stack);
+                            ReInventoryController.CreateInventory(inventoryName, (int) DEFAULT_SIZE, (int) DEFAULT_STACK);
                             inv = ReInventoryController.GetInventory(inventoryName);
                         }
                     }
@@ -193,6 +262,7 @@ namespace Reshape.ReGraph
                     {
                         inv.OnChange -= OnInventoryChange;
                         inv.OnChange += OnInventoryChange;
+                        OnInventoryChange(item.id);
                     }
                     else
                     {
@@ -226,7 +296,7 @@ namespace Reshape.ReGraph
                 }
             }
         }
-        
+
         protected override void OnReset ()
         {
             if (executionType == ExecutionType.LinkItemTotalQuantity)
@@ -238,9 +308,10 @@ namespace Reshape.ReGraph
                         inv.OnChange -= OnInventoryChange;
                 }
             }
+
             base.OnReset();
         }
-        
+
         public override bool IsRequireInit ()
         {
             if (executionType == ExecutionType.LinkItemTotalQuantity)
@@ -276,6 +347,15 @@ namespace Reshape.ReGraph
                 return "Amount";
             return string.Empty;
         }
+        
+        private string GetAutoCreateLabel ()
+        {
+            if (executionType == ExecutionType.Load)
+                return "Overwrite";
+            if (executionType is ExecutionType.AddItem)
+                return "Auto Create";
+            return string.Empty;
+        }
 
         private bool ValidateSize (int value)
         {
@@ -295,6 +375,8 @@ namespace Reshape.ReGraph
             {"Create", ExecutionType.Create},
             {"Destroy", ExecutionType.Destroy},
             {"Clear", ExecutionType.Clear},
+            {"Save", ExecutionType.Save},
+            {"Load", ExecutionType.Load},
             {"Get Item Quantity", ExecutionType.GetItemTotalQuantity},
         };
 
@@ -327,6 +409,16 @@ namespace Reshape.ReGraph
             {
                 if (!string.IsNullOrEmpty(inventoryName))
                     return $"Clear {inventoryName}";
+            }
+            else if (executionType == ExecutionType.Save)
+            {
+                if (!string.IsNullOrEmpty(inventoryName))
+                    return $"Save {inventoryName}";
+            }
+            else if (executionType == ExecutionType.Load)
+            {
+                if (!string.IsNullOrEmpty(inventoryName))
+                    return $"Load {inventoryName}";
             }
             else if (executionType == ExecutionType.AddItem)
             {

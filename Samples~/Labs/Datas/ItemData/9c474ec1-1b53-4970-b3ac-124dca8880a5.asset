@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 9c474ec1-1b53-4970-b3ac-124dca8880a5
   icon: {fileID: 21300000, guid: f925195f8710d4924813bb2a8512c273, type: 3}
-  name:
-    stringValue: 
-    variableValue: {fileID: 11400000, guid: f05610aca74ee403fb8c052157c40217, type: 2}
-    type: 1
+  displayName:
     dirty: 1
+    stringValue: Coin
+    variableValue: {fileID: 0}
+    type: 0
   description:
+    dirty: 1
     stringValue: 
     variableValue: {fileID: 11400000, guid: c1509adbc2bd7443a9fede51942e0623, type: 2}
     type: 1
-    dirty: 1

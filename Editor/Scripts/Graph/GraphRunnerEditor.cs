@@ -31,7 +31,11 @@ namespace Reshape.ReGraph
                             {
                                 EditorGUILayout.HelpBox("All graph data in saved in the scene file.", MessageType.Info);
                                 if (GUILayout.Button("Edit Graph"))
-                                    GraphEditorWindow.OpenWindow(this.Tree.UnitySerializedObject);
+                                {
+                                    GraphRunner runner = Tree.UnitySerializedObject.targetObject as GraphRunner;
+                                    GraphEditorWindow.OpenWindow(runner);
+                                }
+
                                 base.OnInspectorGUI();
                                 if (IsShowCleanGraphButton())
                                     DisplayCleanGraphButton();

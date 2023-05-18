@@ -19,7 +19,7 @@ namespace Reshape.ReFramework
         [LabelText("Item DB")]
         public List<ItemList> itemDb;
 
-        [MenuItem("Tools/Reshape/Item Manager")]
+        [MenuItem("Tools/Reshape/Item Manager", priority = 11100)]
         public static void OpenWindow ()
         {
             var window = GetWindow<ItemManager>();

@@ -7,6 +7,7 @@ using Reshape.Unity;
 
 namespace Reshape.ReGraph
 {
+    [AddComponentMenu("ReGraph/Graph Runner", 1)]
     [HideMonoScript]
     [DisallowMultipleComponent]
     public class GraphRunner : BaseBehaviour
@@ -188,6 +189,13 @@ namespace Reshape.ReGraph
             }
         }
 
+        protected void LateUpdate ()
+        {
+            if (!activated)
+                return;
+            graph?.CleanExecutes();
+        }
+
         protected void OnDisable ()
         {
             Disable();
@@ -354,13 +362,7 @@ namespace Reshape.ReGraph
         {
             if (graph == null)
                 return false;
-            bool haveContain = false; 
-            Graph.Traverse(graph.RootNode, (n) =>
-            {
-                if (n.GetType() == nodeType)
-                    haveContain = true;
-            });
-            return haveContain;
+            return graph.IsNodeTypeInUse(nodeType);
         }
 #endif
     }

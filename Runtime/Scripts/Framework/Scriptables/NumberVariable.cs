@@ -3,7 +3,8 @@ using Reshape.Unity;
 using UnityEngine;
 using Sirenix.OdinInspector;
 #if UNITY_EDITOR
-	using UnityEditor;
+using System.IO;
+using UnityEditor;
 #endif
 
 namespace Reshape.ReFramework
@@ -21,6 +22,23 @@ namespace Reshape.ReFramework
 		public float GetValue ()
 		{
 			return runtimeValue;
+		}
+		
+		public override object GetObject ()
+		{
+			return GetValue();
+		}
+		
+		public override void SetObject (object obj)
+		{
+			if (obj is int)
+				SetValue((int)obj);
+			else if (obj is long)
+				SetValue((long)obj);
+			else if (obj is double)
+				SetValue((float)(double)obj);
+			else if (obj is float)
+				SetValue((float)obj);
 		}
 
 		public void SetValue (float value)
@@ -100,6 +118,52 @@ namespace Reshape.ReFramework
 		private void OnChangeValue()
 		{
 			SetValue(value);
+		}
+		
+		public static VariableScriptableObject CreateNew (VariableScriptableObject variable)
+		{
+			if (variable == null )
+			{
+				return (VariableScriptableObject) CreateNew(null);
+			}
+			else if (variable.GetType() == typeof(NumberVariable))
+			{
+				return (VariableScriptableObject) CreateNew((NumberVariable) variable);
+			}
+			else
+			{
+				bool proceed = EditorUtility.DisplayDialog("Graph Variable", "Are you sure you want to create a new variable to replace the existing assigned variable ?", "OK", "Cancel");
+				if (proceed)
+				{
+					var number = CreateNew(null);
+					if (number != null)
+						return (VariableScriptableObject) number;
+				}
+			}
+			return variable;
+		}
+		
+		public static NumberVariable CreateNew (NumberVariable number)
+		{
+			if (number != null)
+			{
+				bool proceed = EditorUtility.DisplayDialog("Graph Variable", "Are you sure you want to create a new variable to replace the existing assigned variable ?", "OK", "Cancel");
+				if (!proceed)
+					return number;
+			}
+
+			var path = EditorUtility.SaveFilePanelInProject("Graph Variable", "New Number Variable", "asset", "Select a location to create variable");
+			if (path.Length == 0)
+				return number;
+			if (!Directory.Exists(Path.GetDirectoryName(path)))
+				return number;
+
+			NumberVariable variable = ScriptableObject.CreateInstance<NumberVariable>();
+			AssetDatabase.CreateAsset(variable, path);
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
+
+			return variable;
 		}
 #endif
 	}

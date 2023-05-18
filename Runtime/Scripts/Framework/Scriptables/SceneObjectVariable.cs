@@ -5,6 +5,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine.AI;
+using UnityEngine.Audio;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 #if UNITY_EDITOR
@@ -30,6 +31,36 @@ namespace Reshape.ReFramework
                     GameObject go = null;
                     if (sceneObject.TryGetValue(ref go))
                         return go;
+                }
+            }
+            
+            return default;
+        }
+        
+        public Material GetMaterial ()
+        {
+            if (sceneObject != null)
+            {
+                if (sceneObject.IsMaterial())
+                {
+                    Material mat = null;
+                    if (sceneObject.TryGetValue(ref mat))
+                        return mat;
+                }
+            }
+            
+            return default;
+        }
+        
+        public AudioMixer GetAudioMixer ()
+        {
+            if (sceneObject != null)
+            {
+                if (sceneObject.IsAudioMixer())
+                {
+                    AudioMixer mixer = null;
+                    if (sceneObject.TryGetValue(ref mixer))
+                        return mixer;
                 }
             }
             
@@ -66,6 +97,24 @@ namespace Reshape.ReFramework
             {
                 if (sceneObject.IsComponent())
                     sceneObject.TrySetValue(comp);
+            }
+        }
+        
+        public void SetValue (Material mat)
+        {
+            if (sceneObject != null)
+            {
+                if (sceneObject.IsMaterial())
+                    sceneObject.TrySetValue(mat);
+            }
+        }
+        
+        public void SetValue (AudioMixer mixer)
+        {
+            if (sceneObject != null)
+            {
+                if (sceneObject.IsAudioMixer())
+                    sceneObject.TrySetValue(mixer);
             }
         }
         

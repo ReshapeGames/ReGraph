@@ -14,7 +14,8 @@ namespace Reshape.ReGraph
             None,
             PlayClip = 100,
             Stop = 200,
-            Pause = 300
+            Pause = 300,
+            Unpause = 400
         }
 
         [SerializeField]
@@ -56,6 +57,10 @@ namespace Reshape.ReGraph
                 {
                     audio.Pause();
                 }
+                else if (executionType == ExecutionType.Unpause)
+                {
+                    audio.UnPause();
+                }
                 else if (executionType == ExecutionType.PlayClip)
                 {
                     if (clip == null)
@@ -75,8 +80,6 @@ namespace Reshape.ReGraph
                         {
                             audio.PlayOneShot(clip);
                         }
-
-                        audio.PlayOneShot(clip);
                     }
                 }
             }
@@ -87,9 +90,10 @@ namespace Reshape.ReGraph
 #if UNITY_EDITOR
         private static IEnumerable TypeChoice = new ValueDropdownList<ExecutionType>()
         {
-            {"Play \\ Resume", ExecutionType.PlayClip},
+            {"Play", ExecutionType.PlayClip},
             {"Stop", ExecutionType.Stop},
-            {"Pause", ExecutionType.Pause}
+            {"Pause", ExecutionType.Pause},
+            {"Resume", ExecutionType.Unpause}
         };
 
         public static string displayName = "Audio Behaviour Node";
@@ -113,6 +117,8 @@ namespace Reshape.ReGraph
                     return "Stop " + audioSource.name;
                 if (executionType is ExecutionType.Pause)
                     return "Pause " + audioSource.name;
+                if (executionType is ExecutionType.Unpause)
+                    return "Resume " + audioSource.name;
                 if (executionType is ExecutionType.PlayClip && clip != null)
                     return "Play " + clip.name + " on " + audioSource.name;
             }

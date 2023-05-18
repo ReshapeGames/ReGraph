@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Reshape.ReFramework;
 using Reshape.Unity.Editor;
+using Sirenix.OdinInspector.Editor;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Reshape.ReGraph
 {
@@ -25,8 +28,10 @@ namespace Reshape.ReGraph
         const string sPropPosition = "position";
         const string sViewTransformPosition = "graph.viewPosition";
         const string sViewTransformScale = "graph.viewScale";
+        const string sPropGraphId = "graph.id";
 
         private SerializedProperty nodes;
+        private bool haveValidGraphIdAtInit;
 
         public SerializedProperty RootNode
         {
@@ -56,6 +61,31 @@ namespace Reshape.ReGraph
             runner = serializedObject.targetObject as GraphRunner;
             graph = runner.graph;
             nodes = null;
+
+            haveValidGraphIdAtInit = false;
+            SetGraphId();
+            if (haveValidGraphIdAtInit)
+            {
+                graph.haveValidGraphId = true;
+            }
+            else
+            {
+                graph.haveValidGraphId = false;
+                EditorSceneManager.sceneSaved -= OnSceneSaved;
+                EditorSceneManager.sceneSaved += OnSceneSaved;
+            }
+        }
+        
+        private void OnSceneSaved (Scene scene)
+        {
+            EditorSceneManager.sceneSaved -= OnSceneSaved;
+            EditorApplication.delayCall += () =>
+            {
+                haveValidGraphIdAtInit = false;
+                SetGraphId();
+                if (haveValidGraphIdAtInit)
+                    graph.haveValidGraphId = true;
+            };
         }
 
         public void SaveNode (GraphNode node)
@@ -102,6 +132,43 @@ namespace Reshape.ReGraph
                     serializedObject.ApplyModifiedProperties();
                 }
             }
+        }
+
+        public bool SetGraphId ()
+        {
+            if (serializedObject == null)
+                return false;
+            serializedObject.Update();
+            
+            int latestId = GetRunnerFileId();
+            if (latestId > 0)
+            {
+                haveValidGraphIdAtInit = true;
+                int oldId = serializedObject.FindProperty(sPropGraphId).intValue;
+                if (oldId != latestId)
+                {
+                    serializedObject.FindProperty(sPropGraphId).intValue = latestId;
+                    serializedObject.ApplyModifiedProperties();
+                    if (oldId > 0)
+                    {
+                        graph.UpdateGraphId(oldId, latestId);
+                    }
+                    InspectorUtilities.RegisterUnityObjectDirty(serializedObject.targetObject);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public int GetRunnerFileId ()
+        {
+            var inspectorModeInfo = typeof(SerializedObject).GetProperty("inspectorMode", BindingFlags.NonPublic | BindingFlags.Instance);
+            inspectorModeInfo?.SetValue(serializedObject, InspectorMode.Debug, null);
+            var localIdProp = serializedObject.FindProperty("m_LocalIdentfierInFile");
+            if (localIdProp != null)
+                return localIdProp.intValue;
+            return 0;
         }
 
         public void SetViewPreviewNode (GraphNode node)
@@ -215,6 +282,8 @@ namespace Reshape.ReGraph
             node.dirty = false;
             node.forceRepaint = false;
 
+            node.OnClone(selectedNode);
+
             SerializedProperty serializedNode = AppendArrayElement(Nodes);
             serializedNode.managedReferenceValue = node;
 
@@ -244,6 +313,7 @@ namespace Reshape.ReGraph
             {
                 var prop = nodesProperty.GetArrayElementAtIndex(i);
                 var guid = prop.FindPropertyRelative(sPropGuid).stringValue;*/
+            node.OnDelete();
             DeleteNode(Nodes, node);
             serializedObject.ApplyModifiedProperties();
             /*}*/
@@ -282,14 +352,14 @@ namespace Reshape.ReGraph
             var childProperty = FindNode(Nodes, child);
             var parentChildrenProperty = parentProperty.FindPropertyRelative(sPropChildren);
             var childParentProperty = childProperty.FindPropertyRelative(sPropParent);
-            
+
             //~~ NOTE clean up null in children property
             DeleteNode(parentChildrenProperty, null);
 
             SerializedProperty newChild = AppendArrayElement(parentChildrenProperty);
             newChild.managedReferenceValue = child;
-            childParentProperty.managedReferenceValue = parent; 
-                
+            childParentProperty.managedReferenceValue = parent;
+
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -299,10 +369,10 @@ namespace Reshape.ReGraph
             var childProperty = FindNode(Nodes, child);
             var parentChildrenProperty = parentProperty.FindPropertyRelative(sPropChildren);
             var childParentProperty = childProperty.FindPropertyRelative(sPropParent);
-            
+
             DeleteNode(parentChildrenProperty, child);
-            childParentProperty.managedReferenceValue = null; 
-            
+            childParentProperty.managedReferenceValue = null;
+
             serializedObject.ApplyModifiedProperties();
         }
     }

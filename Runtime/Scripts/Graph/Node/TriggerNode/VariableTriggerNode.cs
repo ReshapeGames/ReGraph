@@ -4,6 +4,10 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using Reshape.ReFramework;
 using Reshape.Unity;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -20,6 +24,8 @@ namespace Reshape.ReGraph
         [SerializeField]
         [OnValueChanged("MarkDirty")]
         [HideIf("@triggerType==Type.None")]
+        [InlineButton("@VariableScriptableObject.OpenCreateVariableMenu(variable)", "✚")]
+        [OnInspectorGUI("CheckVariableDirty")]
         public VariableScriptableObject variable;
 
         protected override State OnUpdate (GraphExecution execution, int updateId)
@@ -84,6 +90,19 @@ namespace Reshape.ReGraph
         }
 
 #if UNITY_EDITOR
+        private void CheckVariableDirty ()
+        {
+            string createVarPath = GraphEditorVariable.GetString(runner.gameObject.GetInstanceID().ToString(), "createVariable");
+            if (!string.IsNullOrEmpty(createVarPath))
+            {
+                GraphEditorVariable.SetString(runner.gameObject.GetInstanceID().ToString(), "createVariable", string.Empty);
+                var createVar = (VariableScriptableObject)AssetDatabase.LoadAssetAtPath(createVarPath, typeof(VariableScriptableObject));
+                variable = createVar;
+                MarkDirty();
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            }
+        }
+        
         private IEnumerable TriggerTypeChoice ()
         {
             ValueDropdownList<Type> menu = new ValueDropdownList<Type>();

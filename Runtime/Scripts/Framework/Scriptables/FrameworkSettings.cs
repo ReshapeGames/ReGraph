@@ -35,6 +35,13 @@ namespace Reshape.ReFramework
         public GameObject dialogCanvas;
 
 #if UNITY_EDITOR
+        [BoxGroup("Tween Data")]
+        [ToggleLeft]
+        public bool removeAtSaveScene;
+        [BoxGroup("Tween Data")]
+        [ToggleLeft]
+        public bool removeAtDeleteNode;
+
         public static FrameworkSettings GetSettings ()
         {
             var settings = FindSettings();
@@ -91,7 +98,7 @@ namespace Reshape.ReFramework
             return paths;
         }
         
-        [MenuItem("GameObject/Reshape/1st Person Controller", false, 101)]
+        [MenuItem("GameObject/Reshape/1st Person Controller", false, -102)]
         public static void AddFpPlayerController()
         {
             if ( ReEditorHelper.IsInPrefabStage() )
@@ -122,7 +129,7 @@ namespace Reshape.ReFramework
             EditorSceneManager.MarkAllScenesDirty();
         }
         
-        [MenuItem("GameObject/Reshape/3rd Person Controller", false, 101)]
+        [MenuItem("GameObject/Reshape/3rd Person Controller", false, -101)]
         public static void AddTpPlayerController()
         {
             if ( ReEditorHelper.IsInPrefabStage() )

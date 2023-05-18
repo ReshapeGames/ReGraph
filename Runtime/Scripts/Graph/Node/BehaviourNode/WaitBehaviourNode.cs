@@ -32,11 +32,11 @@ namespace Reshape.ReGraph
             InitVariables();
             execution.variables.SetInt(callbackKey, 0);
 
-            if (time < 0)
+            if (time < 0f)
             {
                 ReDebug.LogWarning("Graph Warning", "Found an empty Wait Behaviour node in " + context.gameObject.name);
             }
-            else if (time > 0)
+            else if (time > 0f)
             {
                 context.runner.Wait(execution.id.ToString(), time, OnWaitComplete, Array.Empty<string>());
             }
@@ -53,7 +53,7 @@ namespace Reshape.ReGraph
         protected override State OnUpdate (GraphExecution execution, int updateId)
         {
             int key = execution.variables.GetInt(callbackKey);
-            if (time <= 0 && key == 0)
+            if (time <= 0f && key == 0)
                 execution.variables.SetInt(callbackKey, updateId);
             if (key > 0 && key < updateId)
                 return base.OnUpdate(execution, updateId);
@@ -99,7 +99,7 @@ namespace Reshape.ReGraph
                     context.runner.ResumeWait(execution.id.ToString());
             }
 
-            base.OnPause(execution);
+            base.OnUnpause(execution);
         }
 
         public override bool IsRequireUpdate ()
@@ -116,7 +116,7 @@ namespace Reshape.ReGraph
 
         private void ShowTimeTip ()
         {
-            if (time == 0)
+            if (time == 0f)
             {
                 EditorGUILayout.HelpBox("Value 0 means 1 frame", MessageType.Info);
             }

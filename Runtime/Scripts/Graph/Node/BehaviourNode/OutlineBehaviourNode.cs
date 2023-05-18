@@ -10,6 +10,9 @@ namespace Reshape.ReGraph
     [System.Serializable]
     public class OutlineBehaviourNode : BehaviourNode
     {
+        public const string VAR_OUTLINEEFFECT_COMP = "_outlineeffect_component";
+        public const string VAR_OUTLINE_COMP = "_outline_component";
+
         public enum ExecutionType
         {
             None,
@@ -39,6 +42,17 @@ namespace Reshape.ReGraph
         [HideIf("@!IsHighlightExecution()")]
         private Color color = Color.black;
 
+        private string outlineEffectCompKey;
+        private string outlineCompKey;
+
+        private void InitVariables ()
+        {
+            if (string.IsNullOrEmpty(outlineEffectCompKey))
+                outlineEffectCompKey = guid + VAR_OUTLINEEFFECT_COMP;
+            if (string.IsNullOrEmpty(outlineCompKey))
+                outlineCompKey = guid + VAR_OUTLINE_COMP;
+        }
+
         protected override void OnStart (GraphExecution execution, int updateId)
         {
             if (executionType == ExecutionType.None || gameObject.IsNull)
@@ -55,27 +69,53 @@ namespace Reshape.ReGraph
                     }
                     else
                     {
-                        Camera cam = (Camera)camera;
-                        OutlineEffect effect = cam.gameObject.GetComponent<OutlineEffect>();
-                        if (effect == null)
+                        InitVariables();
+                        
+                        Component comp = context.GetComp(outlineEffectCompKey);
+                        OutlineEffect effect;
+                        if (comp == null)
                         {
-                            effect = cam.gameObject.AddComponent<OutlineEffect>();
-                            effect.sourceCamera = cam;
-                            effect.shader = GraphManager.instance.frameworkSettings.outlineShader;
-                            effect.bufferShader = GraphManager.instance.frameworkSettings.outlineBufferShader;
+                            Camera cam = (Camera) camera;
+                            effect = cam.gameObject.GetComponent<OutlineEffect>();
+                            if (effect == null)
+                            {
+                                effect = cam.gameObject.AddComponent<OutlineEffect>();
+                                effect.sourceCamera = cam;
+                                effect.shader = GraphManager.instance.frameworkSettings.outlineShader;
+                                effect.bufferShader = GraphManager.instance.frameworkSettings.outlineBufferShader;
+                            }
+                            context.SetComp(outlineEffectCompKey, effect);
+                        }
+                        else
+                        {
+                            effect = (OutlineEffect) comp;
                         }
 
-                        effect.lineColor0 = color;
-
-                        GameObject go = gameObject;
-                        Outline outline = go.GetComponent<Outline>();
-                        if (outline == null)
+                        int colorIndex = effect.AddColor(color);
+                        if (effect.IsValidColorIndex(colorIndex))
                         {
-                            outline = go.AddComponent<Outline>();
-                        }
+                            GameObject go = gameObject;
+                            comp = context.GetComp(outlineCompKey);
+                            Outline outline;
+                            if (comp == null)
+                            {
+                                outline = go.GetComponent<Outline>();
+                                if (outline == null)
+                                    outline = go.AddComponent<Outline>();
+                                context.SetComp(outlineCompKey, outline);
+                            }
+                            else
+                            {
+                                outline = (Outline) comp;
+                            }
 
-                        outline.color = 0;
-                        outline.enabled = true;
+                            outline.SetColor(color, colorIndex);
+                            outline.Enable(true);
+                        }
+                        else
+                        {
+                            ReDebug.LogWarning("Graph Warning", "Found Outline Behaviour node overload colors in " + context.gameObject.name);
+                        }
                     }
                 }
                 else if (executionType == ExecutionType.Unhighlight)
@@ -84,7 +124,7 @@ namespace Reshape.ReGraph
                     Outline outline = go.GetComponent<Outline>();
                     if (outline != null)
                     {
-                        outline.enabled = false;
+                        outline.Enable(false);
                     }
                 }
             }

@@ -26,7 +26,7 @@ namespace Reshape.ReGraph
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Scene Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Scene Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -68,6 +68,11 @@ namespace Reshape.ReGraph
         }
 
         public override string GetNodeViewTitle ()
+        {
+            return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
         {
             return nodeName;
         }

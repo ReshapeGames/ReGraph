@@ -201,6 +201,54 @@ namespace Reshape.ReFramework
 
             return false;
         }
+        
+        public void Reset ()
+        {
+            gameObject = null;
+            component = null;
+            material = null;
+            audioMixer = null;
+        }
+
+        public bool Equals (SceneObject obj)
+        {
+            if (type != obj.type)
+                return false;
+            if (IsGameObject())
+            {
+                if (gameObject == null) return false;
+                GameObject go = null;
+                if (obj.TryGetValue(ref go))
+                    if (gameObject == go)
+                        return true;
+            }
+            else if (IsMaterial())
+            {
+                if (material == null) return false;
+                Material mat = null;
+                if (obj.TryGetValue(ref mat))
+                    if (material == mat)
+                        return true;
+            }
+            else if (IsAudioMixer())
+            {
+                if (audioMixer == null) return false;
+                AudioMixer am = null;
+                if (obj.TryGetValue(ref am))
+                    if (audioMixer == am)
+                        return true;
+            }
+            else if (IsComponent())
+            {
+                if (component == null) return false;
+                Component comp = null;
+                if (obj.TryGetValue(ref comp))
+                    if (component == comp)
+                        return true;
+            }
+            
+            return false;
+        }
 
         public override string ToString ()
         {
@@ -399,7 +447,7 @@ namespace Reshape.ReFramework
             return true;
         }
 
-        private static IEnumerable ObjectTypeChoice = new ValueDropdownList<ObjectType>()
+        public static IEnumerable ObjectTypeChoice = new ValueDropdownList<ObjectType>()
         {
             {"GameObject", ObjectType.GameObject},
             {"Transform", ObjectType.Transform},

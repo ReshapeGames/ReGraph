@@ -34,7 +34,7 @@ namespace Reshape.ReGraph
 
             if (time < 0f)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Wait Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Wait Behaviour node in " + context.gameObject.name);
             }
             else if (time > 0f)
             {
@@ -138,6 +138,11 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle ()
         {
             return nodeName;
+        }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
         }
 
         public override string GetNodeViewDescription ()

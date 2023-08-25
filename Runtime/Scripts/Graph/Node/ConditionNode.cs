@@ -31,5 +31,12 @@ namespace Reshape.ReGraph
         }
 
         public abstract void MarkExecute (GraphExecution execution, int updateId, bool condition);
+
+#if UNITY_EDITOR
+        public override string GetNodeMenuDisplayName ()
+        {
+            return string.Empty;
+        }
+#endif
     }
 }

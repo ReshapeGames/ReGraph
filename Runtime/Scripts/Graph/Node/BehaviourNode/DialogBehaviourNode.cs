@@ -53,13 +53,13 @@ namespace Reshape.ReGraph
         {
             if (executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Dialog Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Dialog Behaviour node in " + context.gameObject.name);
             }
             else if (executionType is ExecutionType.ShowDialog)
             {
                 if (string.IsNullOrEmpty(dialog))
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Dialog Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Dialog Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace Reshape.ReGraph
 
                 if (choices.Count <= 0)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Dialog Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Dialog Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -126,7 +126,7 @@ namespace Reshape.ReGraph
             {
                 if (DialogCanvas.instance == null)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Dialog Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Dialog Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -276,6 +276,11 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle ()
         {
             return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Gameplay/{nodeName}";
         }
 
         public override string GetNodeViewDescription ()

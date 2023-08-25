@@ -70,15 +70,15 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (executionType == ExecutionType.None || agent.IsNull)
+            if (executionType == ExecutionType.None || agent.IsEmpty)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty NavMesh Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty NavMesh Behaviour node in " + context.gameObject.name);
             }
             else if (executionType == ExecutionType.AgentWalk)
             {
-                if (transform.IsNull)
+                if (transform.IsEmpty)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty NavMesh Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty NavMesh Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace Reshape.ReGraph
                 int key = execution.variables.GetInt(proceedKey);
                 if (key == 0)
                 {
-                    if (agent.IsNull)
+                    if (agent.IsEmpty)
                         return State.Failure;
                     var agt = (NavMeshAgent) agent;
                     if (!agt.pathPending)
@@ -188,23 +188,28 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
 
         public override string GetNodeViewDescription ()
         {
-            if (executionType != ExecutionType.None && !agent.IsNull)
+            if (executionType != ExecutionType.None && !agent.IsEmpty)
             {
-                if (executionType == ExecutionType.AgentWalk && !transform.IsNull)
+                if (executionType == ExecutionType.AgentWalk && !transform.IsEmpty)
                 {
                     var pos = ((Transform)transform).position;
                     return agent.name + " walk to " + transform.name + " " + pos + "\n<color=#FFF600>Continue at arrival";
                 }
 
-                if (executionType == ExecutionType.AgentChase && !transform.IsNull)
+                if (executionType == ExecutionType.AgentChase && !transform.IsEmpty)
                 {
                     return agent.name + " chase " + transform.name;
                 }
 
-                if (executionType == ExecutionType.AgentGiveUp && !transform.IsNull)
+                if (executionType == ExecutionType.AgentGiveUp && !transform.IsEmpty)
                 {
                     return agent.name + " give up chase " + transform.name;
                 }

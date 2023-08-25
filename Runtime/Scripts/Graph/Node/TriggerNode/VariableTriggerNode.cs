@@ -67,7 +67,7 @@ namespace Reshape.ReGraph
             }
             else
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Variable Trigger node in " + context.gameObject.name);
+                LogWarning("Found an empty Variable Trigger node in " + context.gameObject.name);
             }
         }
 

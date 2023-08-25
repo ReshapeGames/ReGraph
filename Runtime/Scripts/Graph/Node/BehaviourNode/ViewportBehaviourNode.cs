@@ -60,6 +60,11 @@ namespace Reshape.ReGraph
             return nodeName;
         }
 
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Audio & Visual/{nodeName}";
+        }
+
         public override string GetNodeViewDescription ()
         {
             if (executionType == ExecutionType.CursorNormal)

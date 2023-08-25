@@ -55,17 +55,17 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (executionType == ExecutionType.None || gameObject.IsNull)
+            if (executionType == ExecutionType.None || gameObject.IsEmpty)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Outline Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Outline Behaviour node in " + context.gameObject.name);
             }
             else
             {
                 if (executionType == ExecutionType.Highlight)
                 {
-                    if (camera.IsNull)
+                    if (camera.IsEmpty)
                     {
-                        ReDebug.LogWarning("Graph Warning", "Found an empty Outline Behaviour node in " + context.gameObject.name);
+                        LogWarning("Found an empty Outline Behaviour node in " + context.gameObject.name);
                     }
                     else
                     {
@@ -114,7 +114,7 @@ namespace Reshape.ReGraph
                         }
                         else
                         {
-                            ReDebug.LogWarning("Graph Warning", "Found Outline Behaviour node overload colors in " + context.gameObject.name);
+                            LogWarning("Found Outline Behaviour node overload colors in " + context.gameObject.name);
                         }
                     }
                 }
@@ -156,11 +156,16 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Audio & Visual/{nodeName}";
+        }
 
         public override string GetNodeViewDescription ()
         {
             string desc = String.Empty;
-            if (!gameObject.IsNull)
+            if (!gameObject.IsEmpty)
             {
                 if (executionType == ExecutionType.Highlight)
                     desc = "Highlight " + gameObject.name;

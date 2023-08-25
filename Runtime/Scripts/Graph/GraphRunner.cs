@@ -80,6 +80,11 @@ namespace Reshape.ReGraph
         {
             Activate(type, actionName: triggerId);
         }
+        
+        public void TriggerInventory (TriggerNode.Type type, string triggerId)
+        {
+            Activate(type, actionName: triggerId);
+        }
 
         public void TriggerVariable (TriggerNode.Type type, string triggerId)
         {
@@ -266,6 +271,7 @@ namespace Reshape.ReGraph
                     case TriggerNode.Type.RayMissed:
                     case TriggerNode.Type.RayHit:
                     case TriggerNode.Type.RayLeave:
+                    case TriggerNode.Type.InventoryQuantityChange:
                     case TriggerNode.Type.All:
                         execute.parameters.actionName = actionName;
                         graph?.RunExecute(execute, ReTime.frameCount);

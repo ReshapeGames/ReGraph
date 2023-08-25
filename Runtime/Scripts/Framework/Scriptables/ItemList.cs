@@ -45,6 +45,7 @@ namespace Reshape.ReFramework
         {
             items.Remove(elementToBeRemoved);
             AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(elementToBeRemoved));
+            AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
 

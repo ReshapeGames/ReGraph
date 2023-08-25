@@ -23,6 +23,7 @@ namespace Reshape.ReGraph
             RayReceived = 153,
             RayLeave = 154,
             OnStart = 200,
+            InventoryQuantityChange = 251,
             All = 99999
         }
         
@@ -129,5 +130,12 @@ namespace Reshape.ReGraph
         {
             return false;
         }
+        
+#if UNITY_EDITOR
+        public override string GetNodeMenuDisplayName ()
+        {
+            return string.Empty;
+        }
+#endif
     }
 }

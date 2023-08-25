@@ -17,7 +17,7 @@ namespace Reshape.ReGraph
         protected override void OnStart (GraphExecution execution, int updateId)
         {
             if (unityEvent == null || unityEvent.GetPersistentEventCount() <= 0)
-                ReDebug.LogWarning("Graph Warning", "Found an empty Event Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Event Behaviour node in " + context.gameObject.name);
             else
                 unityEvent?.Invoke();
             base.OnStart(execution, updateId);
@@ -60,6 +60,11 @@ namespace Reshape.ReGraph
         }
 
         public override string GetNodeViewTitle ()
+        {
+            return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
         {
             return nodeName;
         }

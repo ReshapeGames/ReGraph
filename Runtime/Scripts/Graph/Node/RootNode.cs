@@ -109,6 +109,8 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle() { return nodeName; }
         
         public override string GetNodeViewDescription () { return nodeDesc; }
+        
+        public override string GetNodeMenuDisplayName () { return string.Empty; }
 #endif
     }
 }

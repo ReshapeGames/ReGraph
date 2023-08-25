@@ -315,6 +315,20 @@ namespace Reshape.ReGraph
 
             return false;
         }
+        
+        public GraphNode GetNode (string nodeId)
+        {
+            if (nodes != null)
+            {
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    if (nodes[i] != null && nodes[i].guid == nodeId)
+                        return nodes[i];
+                }
+            }
+
+            return null;
+        }
 
         public static List<GraphNode> GetChildren (GraphNode parent)
         {

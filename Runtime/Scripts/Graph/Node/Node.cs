@@ -1,4 +1,5 @@
 using Reshape.ReFramework;
+using Reshape.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -19,10 +20,15 @@ namespace Reshape.ReGraph
         [InlineButton("ShowAdvanceSettings", "≡")]
         public bool enabled = true;
         
-        [ShowIf("showAdvanceSettings"), BoxGroup("Show Debug Info")]
+        [ShowIf("showAdvanceSettings"), BoxGroup("Debug Info")]
         [ReadOnly]
         [PropertyOrder(-50)]
         public string guid = System.Guid.NewGuid().ToString();
+
+        [ShowIf("showAdvanceSettings"), BoxGroup("Debug Info")]
+        [PropertyOrder(-51)]
+        [LabelText("Print Log")]
+        public bool printDebugLog = true;
         
         [HideInInspector]
         public Vector2 position;
@@ -39,31 +45,40 @@ namespace Reshape.ReGraph
             dirty = true;
         }
         
-        protected void MarkPropertyDirty (FloatProperty p)
+        protected bool MarkPropertyDirty (FloatProperty p)
         {
             if (p.dirty)
             {
                 p.dirty = false;
                 MarkDirty();
+                return true;
             }
+
+            return false;
         }
         
-        protected void MarkPropertyDirty (StringProperty p)
+        protected bool MarkPropertyDirty (StringProperty p)
         {
             if (p.dirty)
             {
                 p.dirty = false;
                 MarkDirty();
+                return true;
             }
+
+            return false;
         }
         
-        protected void MarkPropertyDirty (SceneObjectProperty p)
+        protected bool MarkPropertyDirty (SceneObjectProperty p)
         {
             if (p.dirty)
             {
                 p.dirty = false;
                 MarkDirty();
+                return true;
             }
+
+            return false;
         }
         
         protected void MarkRepaint ()
@@ -145,6 +160,12 @@ namespace Reshape.ReGraph
         public void Unpause (GraphExecution execution)
         {
             OnUnpause(execution);
+        }
+
+        protected void LogWarning (string message)
+        {
+            if (printDebugLog)
+                ReDebug.LogWarning("Graph Node Warning", message);
         }
 
 #if UNITY_EDITOR

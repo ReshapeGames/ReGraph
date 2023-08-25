@@ -51,9 +51,9 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (executionType == ExecutionType.None || gameObject.IsNull || actionName == null)
+            if (executionType == ExecutionType.None || gameObject.IsEmpty || actionName == null)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Raycast Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Raycast Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -63,7 +63,7 @@ namespace Reshape.ReGraph
                 {
                     if (camera == null || paramFloat1 <= 0)
                     {
-                        ReDebug.LogWarning("Graph Warning", "Found an empty Raycast Behaviour node in " + context.gameObject.name);
+                        LogWarning("Found an empty Raycast Behaviour node in " + context.gameObject.name);
                     }
                     else
                     {
@@ -157,15 +157,20 @@ namespace Reshape.ReGraph
             return nodeName;
         }
 
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
+
         public override string GetNodeViewDescription ()
         {
-            if (!gameObject.IsNull && actionName != null)
+            if (!gameObject.IsEmpty && actionName != null)
             {
                 if (executionType == ExecutionType.RaycastEnableFromCameraToWorld)
-                    if (!camera.IsNull && paramFloat1 > 0)
+                    if (!camera.IsEmpty && paramFloat1 > 0)
                         return "World Cast From Camera on " + gameObject.name + " at "+actionName+" action";
                 if (executionType == ExecutionType.RaycastEnableFromMouseToWorld)
-                    if (!camera.IsNull && paramFloat1 > 0)
+                    if (!camera.IsEmpty && paramFloat1 > 0)
                         return "World Cast From Mouse on " + gameObject.name + " at "+actionName+" action";
                 if (executionType == ExecutionType.RaycastEnableFromMouseToUi)
                     return "UI Cast From Mouse on " + gameObject.name + " at "+actionName+" action";

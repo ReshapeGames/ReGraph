@@ -20,7 +20,7 @@ namespace Reshape.ReGraph
         }
 
         [SerializeReference]
-        [ShowIf("ShowChildren"), BoxGroup("Show Debug Info")]
+        [ShowIf("ShowChildren"), BoxGroup("Debug Info")]
         [ReadOnly]
         [ListDrawerSettings(ListElementLabelName = "guid")]
         public List<GraphNode> children = new List<GraphNode>();
@@ -52,7 +52,7 @@ namespace Reshape.ReGraph
             {
                 if (runner.graph.id == 0)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found empty graph id in " + runner.gameObject.name);
+                    LogWarning("Found empty graph id in " + runner.gameObject.name);
                     return string.Empty;
                 }
 
@@ -80,6 +80,7 @@ namespace Reshape.ReGraph
         public abstract string GetNodeInspectorTitle ();
         public abstract string GetNodeViewTitle ();
         public abstract string GetNodeViewDescription ();
+        public abstract string GetNodeMenuDisplayName ();
 #endif
 
         public abstract ChildrenType GetChildrenType ();

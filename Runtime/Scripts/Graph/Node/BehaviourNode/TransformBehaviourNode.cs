@@ -61,7 +61,7 @@ namespace Reshape.ReGraph
             {
                 if (!enabled)
                     return true;
-                if (!linkedValue.IsNull)
+                if (!linkedValue.IsEmpty)
                     return true;
                 return false;
             }
@@ -139,9 +139,9 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (transform.IsNull || executionType == ExecutionType.None)
+            if (transform.IsEmpty || executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Transform Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Transform Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -599,10 +599,15 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
 
         public override string GetNodeViewDescription ()
         {
-            if (!transform.IsNull)
+            if (!transform.IsEmpty)
             {
                 string message = "Set ";
                 switch (executionType)

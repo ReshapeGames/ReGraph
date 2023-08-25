@@ -61,15 +61,15 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (gameObject.IsNull || executionType == ExecutionType.None)
+            if (gameObject.IsEmpty || executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty GameObject Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty GameObject Behaviour node in " + context.gameObject.name);
             }
             else if (executionType is ExecutionType.DisableComponent or ExecutionType.EnableComponent)
             {
                 if (component == null)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty GameObject Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty GameObject Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace Reshape.ReGraph
             else if (executionType == ExecutionType.Spawn)
             {
                 GameObject go = null;
-                if (!location.IsNull)
+                if (!location.IsEmpty)
                     go = context.runner.TakeFromPool(gameObject, (Transform)location);
                 else
                     go = context.runner.TakeFromPool(gameObject, context.transform);
@@ -154,7 +154,7 @@ namespace Reshape.ReGraph
         private IEnumerable DrawComponentListDropdown ()
         {
             var actionNameListDropdown = new ValueDropdownList<Component>();
-            if (!gameObject.IsNull)
+            if (!gameObject.IsEmpty)
             {
                 var components = ((GameObject)gameObject).GetComponents<Component>();
                 foreach (var comp in components)
@@ -184,10 +184,15 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
 
         public override string GetNodeViewDescription ()
         {
-            if (!gameObject.IsNull)
+            if (!gameObject.IsEmpty)
             {
                 if (executionType == ExecutionType.DisableComponent && component != null)
                 {

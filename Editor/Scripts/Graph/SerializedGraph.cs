@@ -367,12 +367,18 @@ namespace Reshape.ReGraph
         {
             var parentProperty = FindNode(Nodes, parent);
             var childProperty = FindNode(Nodes, child);
-            var parentChildrenProperty = parentProperty.FindPropertyRelative(sPropChildren);
-            var childParentProperty = childProperty.FindPropertyRelative(sPropParent);
-
-            DeleteNode(parentChildrenProperty, child);
-            childParentProperty.managedReferenceValue = null;
-
+            if (parentProperty != null)
+            {
+                var parentChildrenProperty = parentProperty.FindPropertyRelative(sPropChildren);
+                DeleteNode(parentChildrenProperty, child);
+            }
+            
+            if (childProperty != null)
+            {
+                var childParentProperty = childProperty.FindPropertyRelative(sPropParent);
+                childParentProperty.managedReferenceValue = null;
+            }
+            
             serializedObject.ApplyModifiedProperties();
         }
     }

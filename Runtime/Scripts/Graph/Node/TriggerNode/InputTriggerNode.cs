@@ -87,12 +87,12 @@ namespace Reshape.ReGraph
                 }
                 else
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Input Trigger node in " + context.gameObject.name);
+                    LogWarning("Found an empty Input Trigger node in " + context.gameObject.name);
                 }
             }
             else
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Input Trigger node in " + context.gameObject.name);
+                LogWarning("Found an empty Input Trigger node in " + context.gameObject.name);
             }
 #endif
         }

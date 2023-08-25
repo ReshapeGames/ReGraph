@@ -46,9 +46,9 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (animator.IsNull || executionType is ExecutionType.None || parameter == 0)
+            if (animator.IsEmpty || executionType is ExecutionType.None || parameter == 0)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Animator Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Animator Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Reshape.ReGraph
         {
             var listDropdown = new ValueDropdownList<int>();
             listDropdown.Add("Yet Select", 0);
-            if (!animator.IsNull)
+            if (!animator.IsEmpty)
             {
                 var paramList = ((Animator) animator).parameters;
                 for (var i = 0; i < paramList.Length; i++)
@@ -136,10 +136,15 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Animation/{nodeName}";
+        }
 
         public override string GetNodeViewDescription ()
         {
-            if (!animator.IsNull && executionType is ExecutionType.None == false && parameter != 0)
+            if (!animator.IsEmpty && executionType is ExecutionType.None == false && parameter != 0)
             {
                 string parameterName = string.Empty;
                 var paramList = ((Animator) animator).parameters;

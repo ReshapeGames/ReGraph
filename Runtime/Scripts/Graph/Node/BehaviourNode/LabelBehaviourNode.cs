@@ -64,17 +64,17 @@ namespace Reshape.ReGraph
             bool error = false;
             if (executionType is ExecutionType.StringToLabel or ExecutionType.VariableToLabel)
             {
-                if (textLabel.IsNull)
+                if (textLabel.IsEmpty)
                     error = true;
             }
             else if (executionType is ExecutionType.StringToTextMesh or ExecutionType.VariableToTextMesh)
             {
-                if (textMeshLabel.IsNull)
+                if (textMeshLabel.IsEmpty)
                     error = true;
             }
             else if (executionType is ExecutionType.StringToTextMeshPro or ExecutionType.VariableToTextMeshPro)
             {
-                if (textMeshProLabel.IsNull)
+                if (textMeshProLabel.IsEmpty)
                     error = true;
             }
 
@@ -91,7 +91,7 @@ namespace Reshape.ReGraph
 
             if (error)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Label Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Label Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -135,19 +135,24 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Audio & Visual/{nodeName}";
+        }
 
         public override string GetNodeViewDescription ()
         {
             if (executionType is ExecutionType.None)
                 return string.Empty;
             if (executionType is ExecutionType.StringToLabel or ExecutionType.VariableToLabel)
-                if (textLabel.IsNull)
+                if (textLabel.IsEmpty)
                     return string.Empty;
             if (executionType is ExecutionType.StringToTextMesh or ExecutionType.VariableToTextMesh)
-                if (textMeshLabel.IsNull)
+                if (textMeshLabel.IsEmpty)
                     return string.Empty;
             if (executionType is ExecutionType.StringToTextMeshPro or ExecutionType.VariableToTextMeshPro)
-                if (textMeshProLabel.IsNull)
+                if (textMeshProLabel.IsEmpty)
                     return string.Empty;
 
             string message = "Set variable to ";

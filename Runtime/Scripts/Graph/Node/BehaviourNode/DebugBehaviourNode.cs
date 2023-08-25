@@ -57,6 +57,11 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
+        }
 
         public override string GetNodeViewDescription ()
         {

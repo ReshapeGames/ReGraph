@@ -33,7 +33,7 @@ namespace Reshape.ReGraph
         {
             if (string.IsNullOrEmpty(triggerNode) || executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Trigger Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Trigger Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -90,6 +90,11 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle ()
         {
             return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
         }
 
         public override string GetNodeViewDescription ()

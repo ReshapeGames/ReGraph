@@ -21,8 +21,8 @@ namespace Reshape.ReGraph
         
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (graph.IsNull || actionName == null)
-                ReDebug.LogWarning("Graph Warning", "Found an empty Action Behaviour node in "+context.gameObject.name);
+            if (graph.IsEmpty || actionName == null)
+                LogWarning("Found an empty Action Behaviour node in "+context.gameObject.name);
             else
                 ((GraphRunner)graph)?.TriggerAction(actionName);
             base.OnStart(execution, updateId);
@@ -46,10 +46,15 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
+        }
         
         public override string GetNodeViewDescription ()
         {
-            if (!graph.IsNull && actionName != null)
+            if (!graph.IsEmpty && actionName != null)
                 return "Execute "+actionName+" in graph of "+graph.name;
             return string.Empty;
         }

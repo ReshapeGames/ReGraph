@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Reshape.ReGraph;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -65,6 +66,8 @@ namespace Reshape.ReFramework
             
         }
 
+        public virtual bool supportSaveLoad => true;
+
 #if UNITY_EDITOR
         private bool ShowPropertyPersistentInfo ()
         {
@@ -94,14 +97,13 @@ namespace Reshape.ReFramework
                     VariableScriptableObject preVar = (VariableScriptableObject)varObj;
                     var created = NumberVariable.CreateNew(preVar);
                     if (created != null && created != preVar)
-                    {
-                        GameObject go = (GameObject)Selection.activeObject;
-                        GraphEditorVariable.SetString(go.GetInstanceID().ToString(), "createVariable", AssetDatabase.GetAssetPath(created));
-                    }
+                        SetGraphEditorVariable(created);
                 }
                 else
                 {
-                    NumberVariable.CreateNew(null);
+                    var created = NumberVariable.CreateNew(null);
+                    if (created != null)
+                        SetGraphEditorVariable(created);
                 }
             }
         
@@ -112,16 +114,21 @@ namespace Reshape.ReFramework
                     VariableScriptableObject preVar = (VariableScriptableObject) varObj;
                     var created = WordVariable.CreateNew(preVar);
                     if (created != null && created != preVar)
-                    {
-                        GameObject go = (GameObject) Selection.activeObject;
-                        GraphEditorVariable.SetString(go.GetInstanceID().ToString(), "createVariable", AssetDatabase.GetAssetPath(created));
-                    }
+                        SetGraphEditorVariable(created);
                 }
                 else
                 {
-                    WordVariable.CreateNew(null);
+                    var created = WordVariable.CreateNew(null);
+                    if (created != null)
+                        SetGraphEditorVariable(created);
                 }
             }
+        }
+        
+        private static void SetGraphEditorVariable (VariableScriptableObject created)
+        {
+            GameObject go = (GameObject)Selection.activeObject;
+            GraphEditorVariable.SetString(go.GetInstanceID().ToString(), "createVariable", AssetDatabase.GetAssetPath(created));
         }
 #endif
     }

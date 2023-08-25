@@ -10,6 +10,7 @@ namespace Reshape.ReGraph
         public GraphRunner runner;
         public Graph graph;
         public Dictionary<string, Component> compList;
+        public Dictionary<string, object> cacheList;
         
         public GraphContext(GraphRunner runner)
         {
@@ -18,6 +19,7 @@ namespace Reshape.ReGraph
             gameObject = runner.gameObject;
             transform = gameObject.transform;
             compList = new Dictionary<string, Component>();
+            cacheList = new Dictionary<string, object>();
         }
         
         public Component GetComp (string varId)
@@ -32,6 +34,20 @@ namespace Reshape.ReGraph
         {
             if (!compList.TryAdd(varId, value))
                 compList[varId] = value;
+        }
+        
+        public object GetCache (string cacheId)
+        {
+            if (cacheList.ContainsKey(cacheId))
+                if (cacheList.TryGetValue(cacheId, out object outCache))
+                    return outCache;
+            return null;
+        }
+
+        public void SetCache (string cacheId, object value)
+        {
+            if (!cacheList.TryAdd(cacheId, value))
+                cacheList[cacheId] = value;
         }
     }
 }

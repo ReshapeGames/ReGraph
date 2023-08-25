@@ -26,9 +26,9 @@ namespace Reshape.ReGraph
 
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (rigidbody.IsNull || executionType == ExecutionType.None)
+            if (rigidbody.IsEmpty || executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Physics Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Physics Behaviour node in " + context.gameObject.name);
             }
             else if (executionType == ExecutionType.ClearVelocity)
             {
@@ -53,9 +53,14 @@ namespace Reshape.ReGraph
             return nodeName;
         }
 
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
+
         public override string GetNodeViewDescription ()
         {
-            if (!rigidbody.IsNull)
+            if (!rigidbody.IsEmpty)
             {
                 if (executionType == ExecutionType.ClearVelocity)
                     return "Clear velocity on " + rigidbody.name;

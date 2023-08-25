@@ -195,7 +195,7 @@ namespace Reshape.ReFramework
             if (!Directory.Exists(dataFolder))
                 return;
             EditorUtility.DisplayProgressBar("Graph Saving", "Searching tween data files", 0);
-            var foundAllGraphRunner = UnityEngine.Object.FindObjectsOfType(typeof(GraphRunner));
+            var foundAllGraphRunner = UnityEngine.Object.FindObjectsOfType(typeof(GraphRunner), true);
             var graphRunnerCount = foundAllGraphRunner.Length;
             var folderInfo = new DirectoryInfo(dataFolder);
             var folderFilesInfo = folderInfo.GetFiles("*.asset");

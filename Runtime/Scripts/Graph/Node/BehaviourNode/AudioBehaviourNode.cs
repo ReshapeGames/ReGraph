@@ -42,9 +42,9 @@ namespace Reshape.ReGraph
         
         protected override void OnStart (GraphExecution execution, int updateId)
         {
-            if (audioSource.IsNull || executionType is ExecutionType.None)
+            if (audioSource.IsEmpty || executionType is ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Audio Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Audio Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -65,7 +65,7 @@ namespace Reshape.ReGraph
                 {
                     if (clip == null)
                     {
-                        ReDebug.LogWarning("Graph Warning", "Found an empty Audio Behaviour node in " + context.gameObject.name);
+                        LogWarning("Found an empty Audio Behaviour node in " + context.gameObject.name);
                     }
                     else
                     {
@@ -109,9 +109,14 @@ namespace Reshape.ReGraph
             return nodeName;
         }
 
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Audio & Visual/{nodeName}";
+        }
+
         public override string GetNodeViewDescription ()
         {
-            if (!audioSource.IsNull && executionType is ExecutionType.None == false)
+            if (!audioSource.IsEmpty && executionType is ExecutionType.None == false)
             {
                 if (executionType is ExecutionType.Stop)
                     return "Stop " + audioSource.name;

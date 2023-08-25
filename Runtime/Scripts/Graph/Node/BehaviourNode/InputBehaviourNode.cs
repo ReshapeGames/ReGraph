@@ -66,14 +66,14 @@ namespace Reshape.ReGraph
 #if ENABLE_INPUT_SYSTEM
             if (executionType is ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Input Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Input Behaviour node in " + context.gameObject.name);
             }
             else if (executionType is ExecutionType.MouseRotationEnable)
             {
 
-                if (gameObject.IsNull || inputAction == null || string.IsNullOrEmpty(paramString1))
+                if (gameObject.IsEmpty || inputAction == null || string.IsNullOrEmpty(paramString1))
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Input Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Input Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -86,9 +86,9 @@ namespace Reshape.ReGraph
             }
             else if (executionType is ExecutionType.MouseRotationDisable)
             {
-                if (gameObject.IsNull)
+                if (gameObject.IsEmpty)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Input Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Input Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace Reshape.ReGraph
             {
                 if (inputAction == null)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Input Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Input Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -113,7 +113,7 @@ namespace Reshape.ReGraph
             {
                 if (inputAction == null)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Input Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Input Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -230,6 +230,11 @@ namespace Reshape.ReGraph
         {
             return nodeName;
         }
+        
+        public override string GetNodeMenuDisplayName ()
+        {
+            return nodeName;
+        }
 
         public override string GetNodeViewDescription ()
         {
@@ -237,10 +242,10 @@ namespace Reshape.ReGraph
             if (executionType is ExecutionType.MouseRotationEnable)
             {
 
-                if (inputAction != null && !string.IsNullOrEmpty(paramString1) && !gameObject.IsNull)
+                if (inputAction != null && !string.IsNullOrEmpty(paramString1) && !gameObject.IsEmpty)
                     return "Enable Mouse Control Rotation on " + gameObject.name;
             }
-            else if (executionType is ExecutionType.MouseRotationDisable && !gameObject.IsNull)
+            else if (executionType is ExecutionType.MouseRotationDisable && !gameObject.IsEmpty)
             {
                 return "Disable Mouse Control Rotation on " + gameObject.name;
             }

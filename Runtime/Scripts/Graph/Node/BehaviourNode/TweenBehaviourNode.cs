@@ -106,13 +106,13 @@ namespace Reshape.ReGraph
         {
             if (executionType == ExecutionType.None)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Tween Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Tween Behaviour node in " + context.gameObject.name);
             }
             else if (executionType == ExecutionType.PlayTween)
             {
-                if (tweenObject.IsNull || tweenData == null)
+                if (tweenObject.IsEmpty || tweenData == null)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Tween Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Tween Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -243,9 +243,9 @@ namespace Reshape.ReGraph
             }
             else if (executionType == ExecutionType.StopTween)
             {
-                if (tweenObject.IsNull || string.IsNullOrEmpty(tweenName))
+                if (tweenObject.IsEmpty || string.IsNullOrEmpty(tweenName))
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Tween Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Tween Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -312,9 +312,9 @@ namespace Reshape.ReGraph
             }
             else if (executionType == ExecutionType.StopAnyTween)
             {
-                if (tweenObject.IsNull)
+                if (tweenObject.IsEmpty)
                 {
-                    ReDebug.LogWarning("Graph Warning", "Found an empty Tween Behaviour node in " + context.gameObject.name);
+                    LogWarning("Found an empty Tween Behaviour node in " + context.gameObject.name);
                 }
                 else
                 {
@@ -810,9 +810,14 @@ namespace Reshape.ReGraph
             return nodeName;
         }
 
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Animation/{nodeName}";
+        }
+
         public override string GetNodeViewDescription ()
         {
-            if (executionType == ExecutionType.PlayTween && tweenType != TweenType.None && tweenData != null && !tweenObject.IsNull)
+            if (executionType == ExecutionType.PlayTween && tweenType != TweenType.None && tweenData != null && !tweenObject.IsEmpty)
             {
                 var tweenDataName = tweenData.GetType().ToString();
                 tweenDataName = tweenDataName.Substring(20);
@@ -822,7 +827,7 @@ namespace Reshape.ReGraph
             {
                 return $"Stop tween : {tweenName}";
             }
-            else if (executionType == ExecutionType.StopAnyTween && !tweenObject.IsNull)
+            else if (executionType == ExecutionType.StopAnyTween && !tweenObject.IsEmpty)
             {
                 return $"Stop any tween in {tweenObject}";
             }

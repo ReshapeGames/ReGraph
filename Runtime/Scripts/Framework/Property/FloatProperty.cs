@@ -22,7 +22,7 @@ namespace Reshape.ReFramework
         [HideLabel]
         [ShowIf("@type == 1")]
         [InlineButton("SwitchToFloat", "▼")]
-        [InlineButton("CreateWordVariable", "✚")]
+        [InlineButton("CreateNumberVariable", "✚")]
         [OnValueChanged("MarkDirty")]
         private NumberVariable variableValue;
 
@@ -79,7 +79,7 @@ namespace Reshape.ReFramework
         }
 
 #if UNITY_EDITOR
-        private void CreateWordVariable ()
+        private void CreateNumberVariable ()
         {
             variableValue = NumberVariable.CreateNew(variableValue);
             dirty = true;

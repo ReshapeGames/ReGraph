@@ -3,13 +3,31 @@
 ReGraph is a user-friendly trigger driven behaviour tree in Unity. </br>
 Below is a list of chnages summary for each release build
 
+## [0.2.6] - 2023-08-25
+
+### This milestone featured array
+
+- [Features] Implement Scene Object Variable
+- [Features] Implement Item Variable 
+- [Features] Implement Inventory Trigger Node
+- [Features] Implement Cache Behaviour Node
+- [Features] Implement List Behaviour Node
+- [Features] Implement Scene Object List Variable 
+- [Features] Inventory Behaviour Node support get item name and description from Item List
+- [Features] Behaviour Nodes support print debug log on/off
+- [Editor] Display node category at Graph View context menu
+- [Editor] Auto assign variable into property after created via "+" button
+- [Issues] Fix Item List not save after removed item
+- [Issues] Fix SerializedGraph potential null error
+
+
 ## [0.2.5] - 2023-05-18
 
 ### This milestone featured game save and tween
 
 - [Features] Implement Tween Behaviour Node
 - [Features] Implement Save Behaviour Node for Variable save
-- [Features] Add Save & Node to Inventory Behaviour Node
+- [Features] Add Save & Load to Inventory Behaviour Node
 - [Features] Polish Outline Behaviour Node support concurrent 3 colors
 - [Features] Implement StopOnDeactivate at Graph Runner
 - [Features] Add Unpause for Audio Behaviour Node

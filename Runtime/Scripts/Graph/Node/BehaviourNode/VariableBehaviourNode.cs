@@ -22,7 +22,7 @@ namespace Reshape.ReGraph
         {
             if (variableBehaviour.type == VariableBehaviourInfo.Type.None || variableBehaviour.variable == null)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Variable Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Variable Behaviour node in " + context.gameObject.name);
             }
             else
             {
@@ -107,6 +107,11 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle ()
         {
             return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
         }
 
         public override string GetNodeViewDescription ()

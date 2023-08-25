@@ -218,14 +218,11 @@ namespace Reshape.ReGraph
                 types = TypeCache.GetTypesDerivedFrom<BehaviourNode>();
                 foreach (var type in types)
                 {
-                    if (!existed.Contains(type))
+                    if (!existed.Contains(type) && type != typeof(ConditionNode))
                     {
-                        int index = type.Name.IndexOf("BehaviourNode", StringComparison.Ordinal);
-                        if (index >= 0)
-                        {
-                            list.Add($"Behaviour/{type.Name.Substring(0, index)}", type);
-                            existed.Add(type);
-                        }
+                        var behaviourNode = (BehaviourNode)Activator.CreateInstance(type);
+                        list.Add($"Behaviour/{behaviourNode.GetNodeMenuDisplayName()}", type);
+                        existed.Add(type);
                     }
                 }
             }

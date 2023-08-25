@@ -50,7 +50,7 @@ namespace Reshape.ReGraph
         {
             if (parent == null)
             {
-                ReDebug.LogWarning("Graph Warning", "Found an empty Output Behaviour node in " + context.gameObject.name);
+                LogWarning("Found an empty Output Behaviour node in " + context.gameObject.name);
             }
             base.OnStart(execution, updateId);
         }
@@ -105,6 +105,11 @@ namespace Reshape.ReGraph
         public override string GetNodeViewTitle ()
         {
             return nodeName;
+        }
+
+        public override string GetNodeMenuDisplayName ()
+        {
+            return $"Logic/{nodeName}";
         }
 
         public override string GetNodeViewDescription ()
